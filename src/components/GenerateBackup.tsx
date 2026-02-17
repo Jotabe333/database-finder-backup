@@ -5,10 +5,11 @@ import { toast } from "sonner";
 
 interface Props {
   entry: DatabaseEntry;
+  savePath: string;
   onClose: () => void;
 }
 
-const GenerateBackup = ({ entry, onClose }: Props) => {
+const GenerateBackup = ({ entry, savePath, onClose }: Props) => {
   const [downloaded, setDownloaded] = useState(false);
   const [showConfig, setShowConfig] = useState(false);
 
@@ -16,7 +17,7 @@ const GenerateBackup = ({ entry, onClose }: Props) => {
   const [firebirdRemotePath, setFirebirdRemotePath] = useState("/firebird/data");
   const [firebirdLocalPath, setFirebirdLocalPath] = useState("C:\\Program Files\\Firebird\\Firebird_5_0");
   const [winrarPath, setWinrarPath] = useState("C:\\Program Files\\WinRAR");
-  const [destino, setDestino] = useState(entry.backupPath || "C:\\Users\\%USERNAME%\\Desktop\\BDS");
+  const [destino, setDestino] = useState(savePath || entry.backupPath || "C:\\Users\\%USERNAME%\\Desktop\\BDS");
 
   const buildBat = () => {
     return `@echo off

@@ -3,7 +3,7 @@ import type { DatabaseEntry } from "@/types/database";
 import RegisterForm from "@/components/RegisterForm";
 import DetailView from "@/components/DetailView";
 import GenerateBackup from "@/components/GenerateBackup";
-import { Search, Plus, Pencil, Trash2, Database, Server, Copy, Play } from "lucide-react";
+import { Search, Plus, Pencil, Trash2, Database, Server, Copy, Play, FolderOpen } from "lucide-react";
 
 const INITIAL_DATA: DatabaseEntry[] = [
   { id: "1", name: "RUFINI", cnpj: "12.345.678/0001-90", ip: "10.1.0.144", user: "sa", password: "backup123", backupPath: "D:\\Backups\\RUFINI" },
@@ -19,6 +19,7 @@ const Index = () => {
   const [showRegister, setShowRegister] = useState(false);
   const [editEntry, setEditEntry] = useState<DatabaseEntry | null>(null);
   const [showGenerate, setShowGenerate] = useState<DatabaseEntry | null>(null);
+  const [savePath, setSavePath] = useState("C:\\Users\\%USERNAME%\\Desktop\\BDS");
 
   const filtered = entries.filter((e) =>
     e.name.toLowerCase().includes(search.toLowerCase())
@@ -153,20 +154,32 @@ const Index = () => {
             </div>
           </div>
 
+          {/* Save path + Generate */}
+          <div className="px-6 py-3 flex items-center gap-3 border-t border-border/30">
+            <FolderOpen className="w-4 h-4 text-muted-foreground shrink-0" />
+            <label className="text-xs text-muted-foreground shrink-0">Salvar em:</label>
+            <input
+              className="flex-1 bg-input rounded-lg px-3 py-2 text-xs font-mono text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+              value={savePath}
+              onChange={(e) => setSavePath(e.target.value)}
+              placeholder="C:\Users\...\Desktop\BDS"
+            />
+            <button
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-primary text-primary-foreground hover:brightness-110 transition-all disabled:opacity-40 shrink-0"
+              disabled={!selectedEntry}
+              onClick={() => { if (selectedEntry) setShowGenerate(selectedEntry); }}
+            >
+              <Play className="w-3.5 h-3.5" />
+              Gerar Backup
+            </button>
+          </div>
+
           {/* Footer */}
-          <div className="px-6 py-4 flex items-center justify-between">
+          <div className="px-6 py-3 flex items-center justify-between border-t border-border/30">
             <span className="text-xs text-muted-foreground">
               {filtered.length} registro(s)
             </span>
             <div className="flex gap-2">
-              <button
-                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-primary text-primary-foreground hover:brightness-110 transition-all disabled:opacity-40"
-                disabled={!selectedEntry}
-                onClick={() => { if (selectedEntry) setShowGenerate(selectedEntry); }}
-              >
-                <Play className="w-3.5 h-3.5" />
-                Gerar Backup
-              </button>
               <button
                 className="px-4 py-2 rounded-lg text-sm font-medium bg-secondary text-secondary-foreground hover:brightness-110 transition-all disabled:opacity-40"
                 disabled={!selectedEntry}
@@ -203,6 +216,7 @@ const Index = () => {
       {showGenerate && (
         <GenerateBackup
           entry={showGenerate}
+          savePath={savePath}
           onClose={() => setShowGenerate(null)}
         />
       )}
