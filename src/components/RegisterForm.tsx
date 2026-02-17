@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { DatabaseEntry } from "@/types/database";
-import { X, Server, Globe, User, Lock, FolderOpen } from "lucide-react";
+import { X, Server, Globe, User, Lock } from "lucide-react";
 
 interface Props {
   onSave: (entry: DatabaseEntry) => void;
@@ -91,14 +91,6 @@ const RegisterForm = ({ onSave, onCancel, editEntry }: Props) => {
             </div>
           </div>
 
-          {/* Backup */}
-          <div>
-            <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Backup</p>
-            <div>
-              <label className="text-[11px] text-muted-foreground mb-1 flex items-center gap-1"><FolderOpen className="w-3 h-3" /> Caminho do banco no servidor <span className="text-muted-foreground/50">(opcional)</span></label>
-              <input className={fieldClass()} value={backupPath} onChange={(e) => setBackupPath(e.target.value)} placeholder="/firebird/data" />
-            </div>
-          </div>
 
           {/* Actions */}
           <div className="flex justify-end gap-1.5 pt-1">
