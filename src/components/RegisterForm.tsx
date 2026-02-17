@@ -63,7 +63,7 @@ const RegisterForm = ({ onSave, onCancel, editEntry }: Props) => {
             <div className="space-y-2.5">
               <div>
                 <label className="text-[11px] text-muted-foreground mb-1 block">Nome <span className="text-destructive">*</span></label>
-                <input className={fieldClass("name")} value={name} onChange={(e) => { setName(e.target.value); setErrors((p) => ({ ...p, name: false })); }} placeholder="Ex: RUFINI" />
+                <input className={fieldClass("name")} value={name} onChange={(e) => { setName(e.target.value); setErrors((p) => ({ ...p, name: false })); }} placeholder="Ex: RIO_NILO" />
               </div>
               <div>
                 <label className="text-[11px] text-muted-foreground mb-1 block">CNPJ <span className="text-muted-foreground/50">(opcional)</span></label>
