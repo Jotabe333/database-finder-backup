@@ -14,8 +14,8 @@ const GenerateBackup = ({ entry, savePath, onClose }: Props) => {
   const [showConfig, setShowConfig] = useState(false);
 
   // Caminhos e credenciais configuráveis
-  const [gbakUser, setGbakUser] = useState(entry.user || "SYSDBA");
-  const [gbakPassword, setGbakPassword] = useState(entry.password || "");
+  const gbakUser = "SYSDBA";
+  const gbakPassword = "Bwd@UPiC!FR4";
   const [firebirdRemotePath, setFirebirdRemotePath] = useState("/firebird/data");
   const [firebirdLocalPath, setFirebirdLocalPath] = useState("C:\\Program Files\\Firebird\\Firebird_5_0");
   const [winrarPath, setWinrarPath] = useState("C:\\Program Files\\WinRAR");
@@ -129,14 +129,6 @@ pause
 
             {showConfig && (
               <div className="space-y-3 rounded-xl border border-border/50 p-4">
-                <div>
-                  <label className="text-xs text-muted-foreground mb-1 block">Usuário Firebird</label>
-                  <input className={fieldClass} value={gbakUser} onChange={(e) => setGbakUser(e.target.value)} />
-                </div>
-                <div>
-                  <label className="text-xs text-muted-foreground mb-1 block">Senha Firebird</label>
-                  <input className={fieldClass} type="password" value={gbakPassword} onChange={(e) => setGbakPassword(e.target.value)} />
-                </div>
                 <div>
                   <label className="text-xs text-muted-foreground mb-1 block">Caminho remoto do Firebird (servidor)</label>
                   <input className={fieldClass} value={firebirdRemotePath} onChange={(e) => setFirebirdRemotePath(e.target.value)} />
