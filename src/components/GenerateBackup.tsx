@@ -40,20 +40,18 @@ gbak -l -t -user ${gbakUser} -password ${gbakPassword} "${entry.ip}:${firebirdRe
 gbak -user ${gbakUser} -pas ${gbakPassword} -p 8192 -o -c "${destino}\\BANCODADOS_${cleanName}.FBK" "${destino}\\BANCODADOS_${cleanName}.FDB"
 del "${destino}\\BANCODADOS_${cleanName}.FBK"
 cd "${winrarPath}"
-rar.exe a -t "${destino}\\BANCODADOS_${cleanName}.rar" "${destino}\\*.FDB"
+rar.exe a -t "${destino}\\BANCODADOS ${cleanName}.rar" "${destino}\\*.FDB"
 del "${destino}\\*.FDB"
 echo.
+echo FEITOOOOoOOOooooooooOOOOO.
+if %ERRORLEVEL%==0 echo. & echo Processo concluido! & echo. & echo FDB disponivel na pasta "BDS". Bora beber um cafezinho
 echo Hora termino: %time%
 echo.
-if %ERRORLEVEL%==0 (
-  echo FEITOOOOoOOOooooooooOOOOO.
-  echo Processo concluido!
-  echo FDB disponivel na pasta "BDS". Bora beber um cafezinho
+pause
 ) ELSE (
-  echo Erro!!! Tu digitou certo? Tem certeza? Tenta de novo campeao...
-)
-echo.
-pause`;
+echo. & echo Erro!!! Tu digitou certo? Tem certeza? ! Tenta de novo campeao...
+pause
+)`;
   };
 
   const batContent = buildBat();
