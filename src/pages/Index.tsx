@@ -4,7 +4,7 @@ import type { DatabaseEntry } from "@/types/database";
 import RegisterForm from "@/components/RegisterForm";
 import DetailView from "@/components/DetailView";
 import GenerateBackup from "@/components/GenerateBackup";
-import { Search, Plus, Pencil, Trash2, Database, Server, Copy, Play, FolderOpen, MoreVertical, Upload, Download, Sun, Moon } from "lucide-react";
+import { Search, Plus, Pencil, Trash2, Database, Server, Copy, Play, FolderOpen, MoreVertical, Upload, Download, Sun, Moon, CheckSquare, Square } from "lucide-react";
 
 const STORAGE_KEY = "backup-generator-entries";
 const SAVE_PATH_KEY = "backup-generator-save-path";
@@ -20,11 +20,11 @@ const loadEntries = (): DatabaseEntry[] => {
 const Index = () => {
   const [entries, setEntries] = useState<DatabaseEntry[]>(loadEntries);
   const [search, setSearch] = useState("");
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [showDetail, setShowDetail] = useState<DatabaseEntry | null>(null);
   const [showRegister, setShowRegister] = useState(false);
   const [editEntry, setEditEntry] = useState<DatabaseEntry | null>(null);
-  const [showGenerate, setShowGenerate] = useState<DatabaseEntry | null>(null);
+  const [showGenerate, setShowGenerate] = useState(false);
   const [savePath, setSavePath] = useState(() => localStorage.getItem(SAVE_PATH_KEY) || "C:\\Users\\%USERNAME%\\Desktop\\BDS");
   const [showMenu, setShowMenu] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -50,6 +50,25 @@ const Index = () => {
     e.name.toLowerCase().includes(search.toLowerCase())
   );
 
+  const toggleSelect = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === filtered.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(filtered.map((e) => e.id)));
+    }
+  };
+
+  const selectedEntries = entries.filter((e) => selectedIds.has(e.id));
+
   const handleSave = (entry: DatabaseEntry) => {
     setEntries((prev) => {
       const exists = prev.find((e) => e.id === entry.id);
@@ -64,7 +83,11 @@ const Index = () => {
     const entry = entries.find((e) => e.id === id);
     if (!window.confirm(`Deseja realmente excluir "${entry?.name || ""}"?`)) return;
     setEntries((prev) => prev.filter((e) => e.id !== id));
-    setSelectedId(null);
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
     toast.success("Registro excluído!");
   };
 
@@ -72,8 +95,6 @@ const Index = () => {
     setEditEntry({ ...entry, id: "", name: entry.name + "_COPIA" });
     setShowRegister(true);
   };
-
-  const selectedEntry = entries.find((e) => e.id === selectedId);
 
   const handleExport = () => {
     const blob = new Blob([JSON.stringify(entries, null, 2)], { type: "application/json" });
@@ -111,10 +132,11 @@ const Index = () => {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
+  const allSelected = filtered.length > 0 && selectedIds.size === filtered.length;
+
   return (
     <div className="flex min-h-screen items-center justify-center p-2 sm:p-4">
       <div className="relative w-full max-w-[720px]">
-        {/* Main window — desktop app feel */}
         <div className="glass-surface rounded-lg overflow-hidden glow-border">
           {/* Title bar */}
           <div className="win-title-bar px-4 sm:px-5 py-3 sm:py-3.5">
@@ -140,40 +162,40 @@ const Index = () => {
               </div>
               <div className="flex items-center gap-1">
                 <div className="relative">
-                <button
-                  onClick={() => setShowMenu(!showMenu)}
-                  className="p-1.5 rounded-md hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <MoreVertical className="w-4 h-4" />
-                </button>
-                {showMenu && (
-                  <>
-                    <div className="fixed inset-0 z-40" onClick={() => setShowMenu(false)} />
-                    <div className="absolute right-0 top-full mt-1 z-50 bg-card rounded-md border border-border py-1 w-44 shadow-2xl">
-                      <button
-                        onClick={handleExport}
-                        className="flex items-center gap-2 w-full px-3 py-2 text-xs text-foreground hover:bg-secondary transition-colors"
-                      >
-                        <Download className="w-3.5 h-3.5" />
-                        Exportar Bancos
-                      </button>
-                      <button
-                        onClick={() => { fileInputRef.current?.click(); setShowMenu(false); }}
-                        className="flex items-center gap-2 w-full px-3 py-2 text-xs text-foreground hover:bg-secondary transition-colors"
-                      >
-                        <Upload className="w-3.5 h-3.5" />
-                        Importar Bancos
-                      </button>
-                    </div>
-                  </>
-                )}
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".json"
-                  className="hidden"
-                  onChange={handleImport}
-                />
+                  <button
+                    onClick={() => setShowMenu(!showMenu)}
+                    className="p-1.5 rounded-md hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <MoreVertical className="w-4 h-4" />
+                  </button>
+                  {showMenu && (
+                    <>
+                      <div className="fixed inset-0 z-40" onClick={() => setShowMenu(false)} />
+                      <div className="absolute right-0 top-full mt-1 z-50 bg-card rounded-md border border-border py-1 w-44 shadow-2xl">
+                        <button
+                          onClick={handleExport}
+                          className="flex items-center gap-2 w-full px-3 py-2 text-xs text-foreground hover:bg-secondary transition-colors"
+                        >
+                          <Download className="w-3.5 h-3.5" />
+                          Exportar Bancos
+                        </button>
+                        <button
+                          onClick={() => { fileInputRef.current?.click(); setShowMenu(false); }}
+                          className="flex items-center gap-2 w-full px-3 py-2 text-xs text-foreground hover:bg-secondary transition-colors"
+                        >
+                          <Upload className="w-3.5 h-3.5" />
+                          Importar Bancos
+                        </button>
+                      </div>
+                    </>
+                  )}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".json"
+                    className="hidden"
+                    onChange={handleImport}
+                  />
                 </div>
               </div>
             </div>
@@ -204,7 +226,14 @@ const Index = () => {
             <div className="rounded-md border border-border overflow-hidden">
               {/* Grid header */}
               <div className="flex items-center px-3 py-2 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider bg-card border-b border-border">
-                <span className="w-[90px] sm:w-[150px]">Nome</span>
+                <button
+                  onClick={toggleSelectAll}
+                  className="mr-2 p-0.5 rounded hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+                  title={allSelected ? "Desmarcar todos" : "Selecionar todos"}
+                >
+                  {allSelected ? <CheckSquare className="w-3.5 h-3.5 text-primary" /> : <Square className="w-3.5 h-3.5" />}
+                </button>
+                <span className="w-[80px] sm:w-[140px]">Nome</span>
                 <span className="hidden sm:block w-[160px]">CNPJ</span>
                 <span className="flex-1">IP</span>
                 <span className="w-[76px] sm:w-[90px] text-right">Ações</span>
@@ -222,14 +251,24 @@ const Index = () => {
                     <div
                       key={entry.id}
                       className={`flex items-center px-3 py-2.5 text-xs cursor-pointer transition-colors border-b border-border/40 last:border-b-0 ${
-                        selectedId === entry.id
+                        selectedIds.has(entry.id)
                           ? "bg-primary/10 border-l-2 border-l-primary"
                           : "hover:bg-secondary/50"
                       }`}
-                      onClick={() => setSelectedId(entry.id)}
+                      onClick={() => toggleSelect(entry.id)}
                       onDoubleClick={() => setShowDetail(entry)}
                     >
-                      <span className="w-[90px] sm:w-[150px] font-medium text-foreground truncate">{entry.name}</span>
+                      <button
+                        className="mr-2 p-0.5 rounded text-muted-foreground"
+                        onClick={(e) => { e.stopPropagation(); toggleSelect(entry.id); }}
+                      >
+                        {selectedIds.has(entry.id) ? (
+                          <CheckSquare className="w-3.5 h-3.5 text-primary" />
+                        ) : (
+                          <Square className="w-3.5 h-3.5" />
+                        )}
+                      </button>
+                      <span className="w-[80px] sm:w-[140px] font-medium text-foreground truncate">{entry.name}</span>
                       <span className="hidden sm:block w-[160px] text-muted-foreground truncate font-mono text-[11px]">{entry.cnpj}</span>
                       <span className="flex-1 text-muted-foreground truncate font-mono text-[11px]">{entry.ip}</span>
                       <div className="w-[76px] sm:w-[90px] flex justify-end gap-0.5">
@@ -285,24 +324,27 @@ const Index = () => {
             </div>
             <button
               className="flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-md text-xs font-medium bg-primary text-primary-foreground hover:brightness-110 transition-all disabled:opacity-30 shrink-0"
-              disabled={!selectedEntry}
-              onClick={() => { if (selectedEntry) setShowGenerate(selectedEntry); }}
+              disabled={selectedEntries.length === 0}
+              onClick={() => setShowGenerate(true)}
             >
               <Play className="w-3 h-3" />
-              Gerar Backup
+              Gerar Backup ({selectedIds.size})
             </button>
           </div>
 
           {/* Status bar */}
           <div className="px-4 sm:px-5 py-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-t border-border bg-card/50">
             <span className="text-[10px] text-muted-foreground font-mono">
-              {filtered.length} registro(s) · {entries.length} total
+              {selectedIds.size} selecionado(s) · {filtered.length} filtrado(s) · {entries.length} total
             </span>
             <div className="flex flex-wrap gap-1.5">
               <button
                 className="px-3 py-1.5 rounded-md text-[11px] font-medium bg-secondary text-secondary-foreground hover:brightness-110 border border-border/50 transition-all disabled:opacity-30"
-                disabled={!selectedEntry}
-                onClick={() => { if (selectedEntry) setShowDetail(selectedEntry); }}
+                disabled={selectedIds.size !== 1}
+                onClick={() => {
+                  const entry = entries.find((e) => selectedIds.has(e.id));
+                  if (entry) setShowDetail(entry);
+                }}
               >
                 Detalhes
               </button>
@@ -328,9 +370,9 @@ const Index = () => {
       )}
       {showGenerate && (
         <GenerateBackup
-          entry={showGenerate}
+          entries={selectedEntries}
           savePath={savePath}
-          onClose={() => setShowGenerate(null)}
+          onClose={() => setShowGenerate(false)}
         />
       )}
     </div>

@@ -6,15 +6,15 @@ app.disableHardwareAcceleration();
 
 function createWindow() {
   const win = new BrowserWindow({
-    width: 780,
-    height: 580,
-    minWidth: 680,
-    minHeight: 480,
+    width: 820,
+    height: 620,
+    minWidth: 720,
+    minHeight: 520,
     icon: path.join(__dirname, '../dist/favicon.png'),
     autoHideMenuBar: true,
     resizable: true,
-    show: false, // Don't show until ready — prevents white flash
-    backgroundColor: '#101318', // Match dark theme background
+    show: false,
+    backgroundColor: '#0b0e13', // Match dark theme --background: 222 22% 5%
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true
