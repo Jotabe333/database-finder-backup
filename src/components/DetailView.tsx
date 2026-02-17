@@ -15,13 +15,13 @@ const DetailView = ({ entry, onClose, onEdit }: Props) => {
   };
 
   const InfoRow = ({ label, value, mono = false }: { label: string; value: string; mono?: boolean }) => (
-    <div className="flex items-center justify-between py-2.5 border-b border-border/30 last:border-0">
-      <span className="text-xs text-muted-foreground">{label}</span>
-      <div className="flex items-center gap-2">
-        <span className={`text-sm text-foreground ${mono ? "font-mono" : ""}`}>{value || "—"}</span>
+    <div className="flex items-center justify-between py-2 border-b border-border/30 last:border-0">
+      <span className="text-[11px] text-muted-foreground">{label}</span>
+      <div className="flex items-center gap-1.5">
+        <span className={`text-xs text-foreground ${mono ? "font-mono" : ""}`}>{value || "—"}</span>
         {value && (
-          <button onClick={() => copyToClipboard(value, label)} className="p-1 rounded hover:bg-secondary/60 text-muted-foreground hover:text-foreground transition-colors">
-            <Copy className="w-3 h-3" />
+          <button onClick={() => copyToClipboard(value, label)} className="p-0.5 rounded hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors">
+            <Copy className="w-2.5 h-2.5" />
           </button>
         )}
       </div>
@@ -29,22 +29,22 @@ const DetailView = ({ entry, onClose, onEdit }: Props) => {
   );
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-background/60 backdrop-blur-sm p-4">
-      <div className="glass-surface rounded-2xl w-full max-w-[400px] glow-border overflow-hidden">
-        <div className="px-6 py-4 border-b border-border/50 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Server className="w-4 h-4 text-primary" />
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-background/70 backdrop-blur-sm p-4">
+      <div className="bg-card rounded-lg w-full max-w-[380px] border border-border shadow-2xl overflow-hidden">
+        <div className="win-title-bar px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-6 h-6 rounded-md bg-primary/15 flex items-center justify-center">
+              <Server className="w-3 h-3 text-primary" />
             </div>
-            <h2 className="font-semibold text-foreground">{entry.name}</h2>
+            <h2 className="text-sm font-semibold text-foreground">{entry.name}</h2>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-secondary/60 text-muted-foreground hover:text-foreground transition-colors">
-            <X className="w-4 h-4" />
+          <button onClick={onClose} className="p-1 rounded hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors">
+            <X className="w-3.5 h-3.5" />
           </button>
         </div>
 
-        <div className="p-6">
-          <div className="rounded-xl border border-border/50 px-4">
+        <div className="p-4">
+          <div className="rounded-md border border-border px-3">
             <InfoRow label="Nome" value={entry.name} />
             <InfoRow label="CNPJ" value={entry.cnpj} mono />
             <InfoRow label="IP" value={entry.ip} mono />
@@ -53,11 +53,11 @@ const DetailView = ({ entry, onClose, onEdit }: Props) => {
             <InfoRow label="Local do Backup" value={entry.backupPath} mono />
           </div>
 
-          <div className="flex justify-end gap-2 pt-5">
-            <button className="px-4 py-2.5 rounded-lg text-sm font-medium bg-secondary text-secondary-foreground hover:brightness-110 transition-all" onClick={onClose}>
+          <div className="flex justify-end gap-1.5 pt-4">
+            <button className="px-3 py-2 rounded-md text-xs font-medium bg-secondary text-secondary-foreground hover:brightness-110 border border-border/50 transition-all" onClick={onClose}>
               Fechar
             </button>
-            <button className="px-5 py-2.5 rounded-lg text-sm font-medium bg-primary text-primary-foreground hover:brightness-110 transition-all" onClick={onEdit}>
+            <button className="px-4 py-2 rounded-md text-xs font-medium bg-primary text-primary-foreground hover:brightness-110 transition-all" onClick={onEdit}>
               Editar
             </button>
           </div>
