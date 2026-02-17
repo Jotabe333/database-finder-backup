@@ -4,7 +4,7 @@ import type { DatabaseEntry } from "@/types/database";
 import RegisterForm from "@/components/RegisterForm";
 import DetailView from "@/components/DetailView";
 import GenerateBackup from "@/components/GenerateBackup";
-import { Search, Plus, Pencil, Trash2, Database, Server, Copy, Play, FolderOpen, MoreVertical, Upload, Download, Minus, X, Sun, Moon } from "lucide-react";
+import { Search, Plus, Pencil, Trash2, Database, Server, Copy, Play, FolderOpen, MoreVertical, Upload, Download, Sun, Moon } from "lucide-react";
 
 const STORAGE_KEY = "backup-generator-entries";
 const SAVE_PATH_KEY = "backup-generator-save-path";
@@ -175,18 +175,6 @@ const Index = () => {
                   onChange={handleImport}
                 />
                 </div>
-                <button
-                  className="p-1.5 rounded-md hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
-                  title="Minimizar"
-                >
-                  <Minus className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  className="p-1.5 rounded-md hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors"
-                  title="Fechar"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
               </div>
             </div>
           </div>
