@@ -42,8 +42,8 @@ const RegisterForm = ({ onSave, onCancel, editEntry }: Props) => {
   const title = isDuplicate ? "Duplicar Registro" : editEntry?.id ? "Editar Registro" : "Novo Registro";
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-background/60 backdrop-blur-sm">
-      <div className="glass-surface rounded-2xl w-[420px] glow-border overflow-hidden">
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-background/60 backdrop-blur-sm p-4">
+      <div className="glass-surface rounded-2xl w-full max-w-[420px] glow-border overflow-hidden">
         <div className="px-6 py-4 border-b border-border/50 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">

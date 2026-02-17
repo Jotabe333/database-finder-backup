@@ -87,8 +87,8 @@ pause
   const fieldClass = "w-full bg-input rounded-lg px-3 py-2 text-xs font-mono text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/30 transition-all";
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-background/60 backdrop-blur-sm">
-      <div className="glass-surface rounded-2xl w-[560px] max-h-[90vh] glow-border overflow-hidden flex flex-col">
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-background/60 backdrop-blur-sm p-4">
+      <div className="glass-surface rounded-2xl w-full max-w-[560px] max-h-[90vh] glow-border overflow-hidden flex flex-col">
         <div className="px-6 py-4 border-b border-border/50 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
