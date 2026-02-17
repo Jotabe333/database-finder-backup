@@ -247,7 +247,7 @@ const Index = () => {
 
           {/* Path + Generate */}
           <div className="px-4 sm:px-5 py-2.5 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2.5">
-            <div className="flex items-center gap-2 flex-1 min-w-0">
+            <div className="flex items-center gap-1.5 flex-1 min-w-0">
               <FolderOpen className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
               <label className="text-[10px] text-muted-foreground shrink-0 uppercase tracking-wide font-medium">Destino:</label>
               <input
@@ -256,6 +256,18 @@ const Index = () => {
                 onChange={(e) => setSavePath(e.target.value)}
                 placeholder="C:\Users\...\Desktop\BDS"
               />
+              <button
+                className="p-1.5 rounded-md bg-secondary hover:brightness-110 text-muted-foreground hover:text-foreground border border-border/50 transition-all shrink-0"
+                title="Selecionar pasta"
+                onClick={async () => {
+                  try {
+                    const dirHandle = await (window as any).showDirectoryPicker();
+                    setSavePath(dirHandle.name);
+                  } catch {}
+                }}
+              >
+                <FolderOpen className="w-3.5 h-3.5" />
+              </button>
             </div>
             <button
               className="flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-md text-xs font-medium bg-primary text-primary-foreground hover:brightness-110 transition-all disabled:opacity-30 shrink-0"
