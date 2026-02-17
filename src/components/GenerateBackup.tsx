@@ -13,12 +13,12 @@ const GenerateBackup = ({ entry, savePath, onClose }: Props) => {
   const [downloaded, setDownloaded] = useState(false);
   const [showConfig, setShowConfig] = useState(false);
 
-  const gbakUser = "SYSDBA";
-  const gbakPassword = "Bwd@UPiC!FR4";
-  const [firebirdRemotePath, setFirebirdRemotePath] = useState("/firebird/data");
+  const gbakUser = entry.user || "SYSDBA";
+  const gbakPassword = entry.password || "Bwd@UPiC!FR4";
+  const [firebirdRemotePath, setFirebirdRemotePath] = useState(entry.backupPath || "/firebird/data");
   const [firebirdLocalPath, setFirebirdLocalPath] = useState("C:\\Program Files\\Firebird\\Firebird_5_0");
   const [winrarPath, setWinrarPath] = useState("C:\\Program Files\\WinRAR");
-  const [destino, setDestino] = useState(savePath || entry.backupPath || "C:\\Users\\%USERNAME%\\Desktop\\BDS");
+  const [destino, setDestino] = useState(savePath || "C:\\Users\\%USERNAME%\\Desktop\\BDS");
 
   const buildBat = () => {
     return `@echo off

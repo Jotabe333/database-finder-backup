@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { DatabaseEntry } from "@/types/database";
-import { X, Server, Globe } from "lucide-react";
+import { X, Server, Globe, User, Lock, FolderOpen } from "lucide-react";
 
 interface Props {
   onSave: (entry: DatabaseEntry) => void;
@@ -12,8 +12,8 @@ const RegisterForm = ({ onSave, onCancel, editEntry }: Props) => {
   const [name, setName] = useState(editEntry?.name ?? "");
   const [cnpj, setCnpj] = useState(editEntry?.cnpj ?? "");
   const [ip, setIp] = useState(editEntry?.ip ?? "");
-  const [user, setUser] = useState(editEntry?.user ?? "");
-  const [password, setPassword] = useState(editEntry?.password ?? "");
+  const [user, setUser] = useState(editEntry?.user ?? "SYSDBA");
+  const [password, setPassword] = useState(editEntry?.password ?? "Bwd@UPiC!FR4");
   const [backupPath, setBackupPath] = useState(editEntry?.backupPath ?? "");
   const [errors, setErrors] = useState<Record<string, boolean>>({});
 
@@ -44,7 +44,6 @@ const RegisterForm = ({ onSave, onCancel, editEntry }: Props) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-background/70 backdrop-blur-sm p-4">
       <div className="bg-card rounded-lg w-full max-w-[400px] border border-border shadow-2xl overflow-hidden">
-        {/* Title bar */}
         <div className="win-title-bar px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-6 h-6 rounded-md bg-primary/15 flex items-center justify-center">
@@ -57,7 +56,7 @@ const RegisterForm = ({ onSave, onCancel, editEntry }: Props) => {
           </button>
         </div>
 
-        <div className="p-4 space-y-4">
+        <div className="p-4 space-y-4 max-h-[70vh] overflow-y-auto">
           {/* Informações do Banco */}
           <div>
             <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Informações do Banco</p>
@@ -81,6 +80,23 @@ const RegisterForm = ({ onSave, onCancel, editEntry }: Props) => {
                 <label className="text-[11px] text-muted-foreground mb-1 flex items-center gap-1"><Globe className="w-3 h-3" /> IP <span className="text-destructive">*</span></label>
                 <input className={fieldClass("ip")} value={ip} onChange={(e) => { setIp(e.target.value); setErrors((p) => ({ ...p, ip: false })); }} placeholder="10.1.0.144" />
               </div>
+              <div>
+                <label className="text-[11px] text-muted-foreground mb-1 flex items-center gap-1"><User className="w-3 h-3" /> Usuário</label>
+                <input className={fieldClass()} value={user} onChange={(e) => setUser(e.target.value)} placeholder="SYSDBA" />
+              </div>
+              <div>
+                <label className="text-[11px] text-muted-foreground mb-1 flex items-center gap-1"><Lock className="w-3 h-3" /> Senha</label>
+                <input className={fieldClass()} type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
+              </div>
+            </div>
+          </div>
+
+          {/* Backup */}
+          <div>
+            <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Backup</p>
+            <div>
+              <label className="text-[11px] text-muted-foreground mb-1 flex items-center gap-1"><FolderOpen className="w-3 h-3" /> Caminho do banco no servidor <span className="text-muted-foreground/50">(opcional)</span></label>
+              <input className={fieldClass()} value={backupPath} onChange={(e) => setBackupPath(e.target.value)} placeholder="/firebird/data" />
             </div>
           </div>
 
