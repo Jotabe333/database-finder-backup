@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { DatabaseEntry } from "@/types/database";
-import { X, Server, Key, Globe, User, FolderOpen } from "lucide-react";
+import { X, Server, Globe } from "lucide-react";
 
 interface Props {
   onSave: (entry: DatabaseEntry) => void;
@@ -36,56 +36,60 @@ const RegisterForm = ({ onSave, onCancel, editEntry }: Props) => {
   };
 
   const fieldClass = (key?: string) =>
-    `w-full bg-input rounded-lg px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/30 transition-all ${key && errors[key] ? "ring-2 ring-destructive/60" : ""}`;
+    `w-full bg-input rounded-md px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground outline-none focus:ring-1 focus:ring-ring/40 border border-border/50 transition-all ${key && errors[key] ? "ring-1 ring-destructive/60 border-destructive/40" : ""}`;
 
   const isDuplicate = editEntry && !editEntry.id;
   const title = isDuplicate ? "Duplicar Registro" : editEntry?.id ? "Editar Registro" : "Novo Registro";
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-background/60 backdrop-blur-sm p-4">
-      <div className="glass-surface rounded-2xl w-full max-w-[420px] glow-border overflow-hidden">
-        <div className="px-6 py-4 border-b border-border/50 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Server className="w-4 h-4 text-primary" />
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-background/70 backdrop-blur-sm p-4">
+      <div className="bg-card rounded-lg w-full max-w-[400px] border border-border shadow-2xl overflow-hidden">
+        {/* Title bar */}
+        <div className="win-title-bar px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-6 h-6 rounded-md bg-primary/15 flex items-center justify-center">
+              <Server className="w-3 h-3 text-primary" />
             </div>
-            <h2 className="font-semibold text-foreground">{title}</h2>
+            <h2 className="text-sm font-semibold text-foreground">{title}</h2>
           </div>
-          <button onClick={onCancel} className="p-1.5 rounded-lg hover:bg-secondary/60 text-muted-foreground hover:text-foreground transition-colors">
-            <X className="w-4 h-4" />
+          <button onClick={onCancel} className="p-1 rounded hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors">
+            <X className="w-3.5 h-3.5" />
           </button>
         </div>
 
-        <div className="p-6 space-y-5">
+        <div className="p-4 space-y-4">
+          {/* Informações do Banco */}
           <div>
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">Informações do Banco</p>
-            <div className="space-y-3">
+            <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Informações do Banco</p>
+            <div className="space-y-2.5">
               <div>
-                <label className="text-xs text-muted-foreground mb-1 block">Nome <span className="text-destructive">*</span></label>
+                <label className="text-[11px] text-muted-foreground mb-1 block">Nome <span className="text-destructive">*</span></label>
                 <input className={fieldClass("name")} value={name} onChange={(e) => { setName(e.target.value); setErrors((p) => ({ ...p, name: false })); }} placeholder="Ex: RUFINI" />
               </div>
               <div>
-                <label className="text-xs text-muted-foreground mb-1 block">CNPJ <span className="text-muted-foreground/50">(opcional)</span></label>
+                <label className="text-[11px] text-muted-foreground mb-1 block">CNPJ <span className="text-muted-foreground/50">(opcional)</span></label>
                 <input className={fieldClass()} value={cnpj} onChange={(e) => setCnpj(e.target.value)} placeholder="00.000.000/0000-00" />
               </div>
             </div>
           </div>
 
+          {/* Conexão */}
           <div>
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">Conexão</p>
-            <div className="space-y-3">
+            <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Conexão</p>
+            <div className="space-y-2.5">
               <div>
-                <label className="text-xs text-muted-foreground mb-1 flex items-center gap-1"><Globe className="w-3 h-3" /> IP <span className="text-destructive">*</span></label>
+                <label className="text-[11px] text-muted-foreground mb-1 flex items-center gap-1"><Globe className="w-3 h-3" /> IP <span className="text-destructive">*</span></label>
                 <input className={fieldClass("ip")} value={ip} onChange={(e) => { setIp(e.target.value); setErrors((p) => ({ ...p, ip: false })); }} placeholder="10.1.0.144" />
               </div>
             </div>
           </div>
 
-          <div className="flex justify-end gap-2 pt-2">
-            <button className="px-4 py-2.5 rounded-lg text-sm font-medium bg-secondary text-secondary-foreground hover:brightness-110 transition-all" onClick={onCancel}>
+          {/* Actions */}
+          <div className="flex justify-end gap-1.5 pt-1">
+            <button className="px-3 py-2 rounded-md text-xs font-medium bg-secondary text-secondary-foreground hover:brightness-110 border border-border/50 transition-all" onClick={onCancel}>
               Cancelar
             </button>
-            <button className="px-5 py-2.5 rounded-lg text-sm font-medium bg-primary text-primary-foreground hover:brightness-110 transition-all" onClick={handleSave}>
+            <button className="px-4 py-2 rounded-md text-xs font-medium bg-primary text-primary-foreground hover:brightness-110 transition-all" onClick={handleSave}>
               Salvar
             </button>
           </div>
