@@ -15,9 +15,17 @@ const RegisterForm = ({ onSave, onCancel, editEntry }: Props) => {
   const [user, setUser] = useState(editEntry?.user ?? "");
   const [password, setPassword] = useState(editEntry?.password ?? "");
   const [backupPath, setBackupPath] = useState(editEntry?.backupPath ?? "");
+  const [errors, setErrors] = useState<Record<string, boolean>>({});
 
   const handleSave = () => {
-    if (!name.trim() || !ip.trim()) return;
+    const newErrors: Record<string, boolean> = {};
+    if (!name.trim()) newErrors.name = true;
+    if (!ip.trim()) newErrors.ip = true;
+    if (!user.trim()) newErrors.user = true;
+    if (!password.trim()) newErrors.password = true;
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
+
     onSave({
       id: editEntry?.id ?? crypto.randomUUID(),
       name: name.trim(),
@@ -29,7 +37,11 @@ const RegisterForm = ({ onSave, onCancel, editEntry }: Props) => {
     });
   };
 
-  const fieldClass = "w-full bg-input rounded-lg px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/30 transition-all";
+  const fieldClass = (key?: string) =>
+    `w-full bg-input rounded-lg px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/30 transition-all ${key && errors[key] ? "ring-2 ring-destructive/60" : ""}`;
+
+  const isDuplicate = editEntry && !editEntry.id;
+  const title = isDuplicate ? "Duplicar Registro" : editEntry?.id ? "Editar Registro" : "Novo Registro";
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-background/60 backdrop-blur-sm">
@@ -39,7 +51,7 @@ const RegisterForm = ({ onSave, onCancel, editEntry }: Props) => {
             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
               <Server className="w-4 h-4 text-primary" />
             </div>
-            <h2 className="font-semibold text-foreground">{editEntry ? "Editar Registro" : "Novo Registro"}</h2>
+            <h2 className="font-semibold text-foreground">{title}</h2>
           </div>
           <button onClick={onCancel} className="p-1.5 rounded-lg hover:bg-secondary/60 text-muted-foreground hover:text-foreground transition-colors">
             <X className="w-4 h-4" />
@@ -51,12 +63,12 @@ const RegisterForm = ({ onSave, onCancel, editEntry }: Props) => {
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">Informações do Banco</p>
             <div className="space-y-3">
               <div>
-                <label className="text-xs text-muted-foreground mb-1 block">Nome</label>
-                <input className={fieldClass} value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex: RUFINI" />
+                <label className="text-xs text-muted-foreground mb-1 block">Nome <span className="text-destructive">*</span></label>
+                <input className={fieldClass("name")} value={name} onChange={(e) => { setName(e.target.value); setErrors((p) => ({ ...p, name: false })); }} placeholder="Ex: RUFINI" />
               </div>
               <div>
-                <label className="text-xs text-muted-foreground mb-1 block">CNPJ</label>
-                <input className={fieldClass} value={cnpj} onChange={(e) => setCnpj(e.target.value)} placeholder="00.000.000/0000-00" />
+                <label className="text-xs text-muted-foreground mb-1 block">CNPJ <span className="text-muted-foreground/50">(opcional)</span></label>
+                <input className={fieldClass()} value={cnpj} onChange={(e) => setCnpj(e.target.value)} placeholder="00.000.000/0000-00" />
               </div>
             </div>
           </div>
@@ -65,16 +77,16 @@ const RegisterForm = ({ onSave, onCancel, editEntry }: Props) => {
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">Conexão</p>
             <div className="space-y-3">
               <div>
-                <label className="text-xs text-muted-foreground mb-1 flex items-center gap-1"><Globe className="w-3 h-3" /> IP</label>
-                <input className={fieldClass} value={ip} onChange={(e) => setIp(e.target.value)} placeholder="10.1.0.144" />
+                <label className="text-xs text-muted-foreground mb-1 flex items-center gap-1"><Globe className="w-3 h-3" /> IP <span className="text-destructive">*</span></label>
+                <input className={fieldClass("ip")} value={ip} onChange={(e) => { setIp(e.target.value); setErrors((p) => ({ ...p, ip: false })); }} placeholder="10.1.0.144" />
               </div>
               <div>
-                <label className="text-xs text-muted-foreground mb-1 flex items-center gap-1"><User className="w-3 h-3" /> Usuário</label>
-                <input className={fieldClass} value={user} onChange={(e) => setUser(e.target.value)} placeholder="admin" />
+                <label className="text-xs text-muted-foreground mb-1 flex items-center gap-1"><User className="w-3 h-3" /> Usuário <span className="text-destructive">*</span></label>
+                <input className={fieldClass("user")} value={user} onChange={(e) => { setUser(e.target.value); setErrors((p) => ({ ...p, user: false })); }} placeholder="admin" />
               </div>
               <div>
-                <label className="text-xs text-muted-foreground mb-1 flex items-center gap-1"><Key className="w-3 h-3" /> Senha</label>
-                <input className={fieldClass} type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
+                <label className="text-xs text-muted-foreground mb-1 flex items-center gap-1"><Key className="w-3 h-3" /> Senha <span className="text-destructive">*</span></label>
+                <input className={fieldClass("password")} type="password" value={password} onChange={(e) => { setPassword(e.target.value); setErrors((p) => ({ ...p, password: false })); }} placeholder="••••••••" />
               </div>
             </div>
           </div>
@@ -84,7 +96,7 @@ const RegisterForm = ({ onSave, onCancel, editEntry }: Props) => {
             <div className="space-y-3">
               <div>
                 <label className="text-xs text-muted-foreground mb-1 flex items-center gap-1"><FolderOpen className="w-3 h-3" /> Caminho do Arquivo</label>
-                <input className={fieldClass} value={backupPath} onChange={(e) => setBackupPath(e.target.value)} placeholder="D:\Backups\NOME_BANCO" />
+                <input className={fieldClass()} value={backupPath} onChange={(e) => setBackupPath(e.target.value)} placeholder="D:\Backups\NOME_BANCO" />
               </div>
             </div>
           </div>
