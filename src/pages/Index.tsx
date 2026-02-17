@@ -4,7 +4,7 @@ import type { DatabaseEntry } from "@/types/database";
 import RegisterForm from "@/components/RegisterForm";
 import DetailView from "@/components/DetailView";
 import GenerateBackup from "@/components/GenerateBackup";
-import { Search, Plus, Pencil, Trash2, Database, Server, Copy, Play, FolderOpen, MoreVertical, Upload, Download, Minus, X } from "lucide-react";
+import { Search, Plus, Pencil, Trash2, Database, Server, Copy, Play, FolderOpen, MoreVertical, Upload, Download, Minus, X, Sun, Moon } from "lucide-react";
 
 const STORAGE_KEY = "backup-generator-entries";
 const SAVE_PATH_KEY = "backup-generator-save-path";
@@ -28,6 +28,15 @@ const Index = () => {
   const [savePath, setSavePath] = useState(() => localStorage.getItem(SAVE_PATH_KEY) || "C:\\Users\\%USERNAME%\\Desktop\\BDS");
   const [showMenu, setShowMenu] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isDark, setIsDark] = useState(() => {
+    const saved = localStorage.getItem("theme");
+    return saved ? saved === "dark" : true;
+  });
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", isDark);
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }, [isDark]);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
@@ -117,6 +126,13 @@ const Index = () => {
                 <h1 className="text-sm font-semibold text-foreground leading-tight">Gerador de Backup</h1>
               </div>
               <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setIsDark(!isDark)}
+                  className="p-1.5 rounded-md hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+                  title={isDark ? "Tema claro" : "Tema escuro"}
+                >
+                  {isDark ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
+                </button>
                 <div className="relative">
                 <button
                   onClick={() => setShowMenu(!showMenu)}
