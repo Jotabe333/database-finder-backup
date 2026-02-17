@@ -52,8 +52,11 @@ const Index = () => {
   };
 
   const handleDelete = (id: string) => {
+    const entry = entries.find((e) => e.id === id);
+    if (!window.confirm(`Deseja realmente excluir "${entry?.name || ""}"?`)) return;
     setEntries((prev) => prev.filter((e) => e.id !== id));
     setSelectedId(null);
+    toast.success("Registro excluído!");
   };
 
   const handleDuplicate = (entry: DatabaseEntry) => {
