@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { DatabaseEntry } from "@/types/database";
 import RegisterForm from "@/components/RegisterForm";
 import DetailView from "@/components/DetailView";
-import { Search, Plus, Pencil, Trash2, Database, Server } from "lucide-react";
+import { Search, Plus, Pencil, Trash2, Database, Server, Copy } from "lucide-react";
 
 const INITIAL_DATA: DatabaseEntry[] = [
   { id: "1", name: "RUFINI", cnpj: "12.345.678/0001-90", ip: "10.1.0.144", user: "sa", password: "backup123", backupPath: "D:\\Backups\\RUFINI" },
@@ -35,6 +35,11 @@ const Index = () => {
   const handleDelete = (id: string) => {
     setEntries((prev) => prev.filter((e) => e.id !== id));
     setSelectedId(null);
+  };
+
+  const handleDuplicate = (entry: DatabaseEntry) => {
+    setEditEntry({ ...entry, id: "", name: entry.name + "_COPIA" });
+    setShowRegister(true);
   };
 
   const selectedEntry = entries.find((e) => e.id === selectedId);
@@ -91,7 +96,7 @@ const Index = () => {
                 <span className="w-[160px]">Nome</span>
                 <span className="w-[170px]">CNPJ</span>
                 <span className="flex-1">IP</span>
-                <span className="w-[80px] text-right">Ações</span>
+                <span className="w-[100px] text-right">Ações</span>
               </div>
 
               {/* Table body */}
@@ -116,16 +121,25 @@ const Index = () => {
                       <span className="w-[160px] font-medium text-foreground truncate">{entry.name}</span>
                       <span className="w-[170px] text-muted-foreground truncate text-xs font-mono">{entry.cnpj}</span>
                       <span className="flex-1 text-muted-foreground truncate text-xs font-mono">{entry.ip}</span>
-                      <div className="w-[80px] flex justify-end gap-1">
+                      <div className="w-[100px] flex justify-end gap-1">
+                        <button
+                          className="p-1.5 rounded-md hover:bg-secondary/60 text-muted-foreground hover:text-foreground transition-colors"
+                          onClick={(e) => { e.stopPropagation(); handleDuplicate(entry); }}
+                          title="Duplicar"
+                        >
+                          <Copy className="w-3.5 h-3.5" />
+                        </button>
                         <button
                           className="p-1.5 rounded-md hover:bg-secondary/60 text-muted-foreground hover:text-foreground transition-colors"
                           onClick={(e) => { e.stopPropagation(); setEditEntry(entry); setShowRegister(true); }}
+                          title="Editar"
                         >
                           <Pencil className="w-3.5 h-3.5" />
                         </button>
                         <button
                           className="p-1.5 rounded-md hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors"
                           onClick={(e) => { e.stopPropagation(); handleDelete(entry.id); }}
+                          title="Excluir"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
