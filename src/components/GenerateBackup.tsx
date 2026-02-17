@@ -13,6 +13,8 @@ const GenerateBackup = ({ entry, savePath, onClose }: Props) => {
   const [downloaded, setDownloaded] = useState(false);
   const [showConfig, setShowConfig] = useState(false);
 
+  // Remove prefixo BANCODADOS_ se o usuário já incluiu no nome
+  const cleanName = entry.name.replace(/^BANCODADOS_/i, "");
   const gbakUser = entry.user || "SYSDBA";
   const gbakPassword = entry.password || "Bwd@UPiC!FR4";
   const [firebirdRemotePath, setFirebirdRemotePath] = useState(entry.backupPath || "/firebird/data");
@@ -22,23 +24,23 @@ const GenerateBackup = ({ entry, savePath, onClose }: Props) => {
 
   const buildBat = () => {
     return `@echo off
-title Backup/Restore - ${entry.name}
+title Backup/Restore - BANCODADOS_${cleanName}
 echo.
 echo ============================================
-echo   Backup do Banco: "${entry.name}"
+echo   Backup do Banco: "BANCODADOS_${cleanName}"
 echo   Servidor: ${entry.ip}
 echo   Usuario: ${gbakUser}
 echo ============================================
 echo.
-echo Iniciando Backup do Banco: "${entry.name}" ...
+echo Iniciando Backup do Banco: "BANCODADOS_${cleanName}" ...
 C:
 cd "${firebirdLocalPath}"
 echo Hora inicio: %time%
-gbak -l -t -user ${gbakUser} -password ${gbakPassword} "${entry.ip}:${firebirdRemotePath}/BANCODADOS_${entry.name}.FDB" "${destino}\\BANCODADOS_${entry.name}.FBK"
-gbak -user ${gbakUser} -pas ${gbakPassword} -p 8192 -o -c "${destino}\\BANCODADOS_${entry.name}.FBK" "${destino}\\BANCODADOS_${entry.name}.FDB"
-del "${destino}\\BANCODADOS_${entry.name}.FBK"
+gbak -l -t -user ${gbakUser} -password ${gbakPassword} "${entry.ip}:${firebirdRemotePath}/BANCODADOS_${cleanName}.FDB" "${destino}\\BANCODADOS_${cleanName}.FBK"
+gbak -user ${gbakUser} -pas ${gbakPassword} -p 8192 -o -c "${destino}\\BANCODADOS_${cleanName}.FBK" "${destino}\\BANCODADOS_${cleanName}.FDB"
+del "${destino}\\BANCODADOS_${cleanName}.FBK"
 cd "${winrarPath}"
-rar.exe a -t "${destino}\\BANCODADOS ${entry.name}.rar" "${destino}\\*.FDB"
+rar.exe a -t "${destino}\\BANCODADOS ${cleanName}.rar" "${destino}\\*.FDB"
 del "${destino}\\*.FDB"
 echo.
 echo FEITOOOOoOOOooooooooOOOOO.
