@@ -126,15 +126,15 @@ const Index = () => {
                 <h1 className="text-sm font-semibold text-foreground leading-tight">Gerador de Backup</h1>
                 <button
                   onClick={() => setIsDark(!isDark)}
-                  className="relative w-9 h-5 rounded-full bg-secondary border border-border/50 flex items-center transition-colors hover:bg-surface-hover"
+                  className="relative w-8 h-[18px] rounded-full bg-border/60 flex items-center transition-all duration-200 hover:bg-border ml-1"
                   title={isDark ? "Tema claro" : "Tema escuro"}
                 >
                   <span
-                    className={`absolute top-0.5 w-4 h-4 rounded-full bg-primary flex items-center justify-center shadow-sm transition-all duration-200 ${
-                      isDark ? "left-[18px]" : "left-0.5"
+                    className={`absolute w-3.5 h-3.5 rounded-full bg-muted-foreground/70 flex items-center justify-center shadow-sm transition-all duration-300 ease-in-out ${
+                      isDark ? "left-[17px]" : "left-[1px]"
                     }`}
                   >
-                    {isDark ? <Moon className="w-2.5 h-2.5 text-primary-foreground" /> : <Sun className="w-2.5 h-2.5 text-primary-foreground" />}
+                    {isDark ? <Moon className="w-2 h-2 text-background" /> : <Sun className="w-2 h-2 text-background" />}
                   </span>
                 </button>
               </div>
