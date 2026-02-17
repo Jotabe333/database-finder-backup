@@ -5,4 +5,5 @@ export interface DatabaseEntry {
   ip: string;
   user: string;
   password: string;
+  backupPath: string;
 }

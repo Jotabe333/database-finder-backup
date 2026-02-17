@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { DatabaseEntry } from "@/types/database";
-import { X, Server, Key, Globe, User } from "lucide-react";
+import { X, Server, Key, Globe, User, FolderOpen } from "lucide-react";
 
 interface Props {
   onSave: (entry: DatabaseEntry) => void;
@@ -14,6 +14,7 @@ const RegisterForm = ({ onSave, onCancel, editEntry }: Props) => {
   const [ip, setIp] = useState(editEntry?.ip ?? "");
   const [user, setUser] = useState(editEntry?.user ?? "");
   const [password, setPassword] = useState(editEntry?.password ?? "");
+  const [backupPath, setBackupPath] = useState(editEntry?.backupPath ?? "");
 
   const handleSave = () => {
     if (!name.trim() || !ip.trim()) return;
@@ -24,6 +25,7 @@ const RegisterForm = ({ onSave, onCancel, editEntry }: Props) => {
       ip: ip.trim(),
       user: user.trim(),
       password: password.trim(),
+      backupPath: backupPath.trim(),
     });
   };
 
@@ -73,6 +75,16 @@ const RegisterForm = ({ onSave, onCancel, editEntry }: Props) => {
               <div>
                 <label className="text-xs text-muted-foreground mb-1 flex items-center gap-1"><Key className="w-3 h-3" /> Senha</label>
                 <input className={fieldClass} type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">Destino do Backup</p>
+            <div className="space-y-3">
+              <div>
+                <label className="text-xs text-muted-foreground mb-1 flex items-center gap-1"><FolderOpen className="w-3 h-3" /> Caminho do Arquivo</label>
+                <input className={fieldClass} value={backupPath} onChange={(e) => setBackupPath(e.target.value)} placeholder="D:\Backups\NOME_BANCO" />
               </div>
             </div>
           </div>
