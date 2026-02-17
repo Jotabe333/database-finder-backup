@@ -1,4 +1,7 @@
 @echo off
+:: Entra na pasta onde o build.bat esta localizado
+cd /d "%~dp0"
+
 echo ============================================
 echo   Gerador de Backup - Build .exe
 echo ============================================
