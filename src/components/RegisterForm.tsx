@@ -21,8 +21,6 @@ const RegisterForm = ({ onSave, onCancel, editEntry }: Props) => {
     const newErrors: Record<string, boolean> = {};
     if (!name.trim()) newErrors.name = true;
     if (!ip.trim()) newErrors.ip = true;
-    if (!user.trim()) newErrors.user = true;
-    if (!password.trim()) newErrors.password = true;
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
@@ -79,24 +77,6 @@ const RegisterForm = ({ onSave, onCancel, editEntry }: Props) => {
               <div>
                 <label className="text-xs text-muted-foreground mb-1 flex items-center gap-1"><Globe className="w-3 h-3" /> IP <span className="text-destructive">*</span></label>
                 <input className={fieldClass("ip")} value={ip} onChange={(e) => { setIp(e.target.value); setErrors((p) => ({ ...p, ip: false })); }} placeholder="10.1.0.144" />
-              </div>
-              <div>
-                <label className="text-xs text-muted-foreground mb-1 flex items-center gap-1"><User className="w-3 h-3" /> Usuário <span className="text-destructive">*</span></label>
-                <input className={fieldClass("user")} value={user} onChange={(e) => { setUser(e.target.value); setErrors((p) => ({ ...p, user: false })); }} placeholder="admin" />
-              </div>
-              <div>
-                <label className="text-xs text-muted-foreground mb-1 flex items-center gap-1"><Key className="w-3 h-3" /> Senha <span className="text-destructive">*</span></label>
-                <input className={fieldClass("password")} type="password" value={password} onChange={(e) => { setPassword(e.target.value); setErrors((p) => ({ ...p, password: false })); }} placeholder="••••••••" />
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">Destino do Backup</p>
-            <div className="space-y-3">
-              <div>
-                <label className="text-xs text-muted-foreground mb-1 flex items-center gap-1"><FolderOpen className="w-3 h-3" /> Caminho do Arquivo</label>
-                <input className={fieldClass()} value={backupPath} onChange={(e) => setBackupPath(e.target.value)} placeholder="D:\Backups\NOME_BANCO" />
               </div>
             </div>
           </div>
