@@ -180,22 +180,33 @@ pause`;
             </div>
           </div>
 
-          {/* Etapas do .bat */}
-          <div className="rounded-md border border-border px-3 py-2.5 space-y-1">
-            <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Etapas por banco</p>
+          {/* Etapas do .bat - Timeline visual */}
+          <div className="rounded-md border border-border px-3 py-2.5 space-y-0">
+            <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Processo de backup por banco</p>
             {[
-              "1. Backup remoto (gbak → .FBK)",
-              "2. Restore local (.FBK → .FDB)",
-              "3. Remover .FBK temporário",
-              "4. Compactar com WinRAR (.rar)",
-              "5. Remover .FDB temporário",
-            ].map((step) => (
-              <div key={step} className="flex items-center gap-2 text-[11px] text-foreground/70">
-                <CheckCircle className="w-3 h-3 text-primary/50" />
-                {step}
+              { step: "1", label: "Gerando FBK", desc: "Backup remoto via gbak" },
+              { step: "2", label: "Gerando FDB", desc: "Restore local do .FBK" },
+              { step: "3", label: "Limpando FBK", desc: "Removendo arquivo temporário" },
+              { step: "4", label: "Compactando arquivos", desc: "Empacotando com WinRAR (.rar)" },
+              { step: "5", label: "Limpando FDB", desc: "Removendo arquivo temporário" },
+            ].map((item, i) => (
+              <div key={item.step} className="flex items-start gap-2.5 relative">
+                {/* Linha vertical conectora */}
+                {i < 4 && (
+                  <div className="absolute left-[9px] top-[20px] w-px h-[calc(100%-4px)] bg-border/60" />
+                )}
+                {/* Círculo numerado */}
+                <div className="w-[19px] h-[19px] rounded-full bg-primary/15 border border-primary/30 flex items-center justify-center shrink-0 mt-0.5 z-10">
+                  <span className="text-[9px] font-bold text-primary">{item.step}</span>
+                </div>
+                {/* Texto */}
+                <div className="py-1">
+                  <p className="text-[11px] font-medium text-foreground leading-tight">{item.label}</p>
+                  <p className="text-[10px] text-muted-foreground leading-tight">{item.desc}</p>
+                </div>
               </div>
             ))}
-            <div className="flex items-center gap-2 text-[11px] text-muted-foreground mt-1 pt-1 border-t border-border/30">
+            <div className="flex items-center gap-2 text-[11px] text-muted-foreground mt-2 pt-1.5 border-t border-border/30">
               <AlertTriangle className="w-3 h-3 text-amber-500/70" />
               Em caso de erro, o banco é ignorado e os demais continuam
             </div>
