@@ -13,7 +13,9 @@ const GenerateBackup = ({ entry, savePath, onClose }: Props) => {
   const [downloaded, setDownloaded] = useState(false);
   const [showConfig, setShowConfig] = useState(false);
 
-  // Caminhos configuráveis
+  // Caminhos e credenciais configuráveis
+  const [gbakUser, setGbakUser] = useState(entry.user || "SYSDBA");
+  const [gbakPassword, setGbakPassword] = useState(entry.password || "");
   const [firebirdRemotePath, setFirebirdRemotePath] = useState("/firebird/data");
   const [firebirdLocalPath, setFirebirdLocalPath] = useState("C:\\Program Files\\Firebird\\Firebird_5_0");
   const [winrarPath, setWinrarPath] = useState("C:\\Program Files\\WinRAR");
@@ -26,21 +28,21 @@ echo.
 echo ============================================
 echo   Backup do Banco: "${entry.name}"
 echo   Servidor: ${entry.ip}
-echo   Usuario: ${entry.user}
+echo   Usuario: ${gbakUser}
 echo ============================================
 echo.
 echo Iniciando Backup do Banco: "${entry.name}" ...
 C:
 cd "${firebirdLocalPath}"
 echo Hora inicio: %time%
-gbak -l -t -user ${entry.user} -password ${entry.password} "${entry.ip}:${firebirdRemotePath}/BANCODADOS_${entry.name}.FDB" "${destino}\\BANCODADOS_${entry.name}.FBK"
+gbak -l -t -user ${gbakUser} -password ${gbakPassword} "${entry.ip}:${firebirdRemotePath}/BANCODADOS_${entry.name}.FDB" "${destino}\\BANCODADOS_${entry.name}.FBK"
 if %ERRORLEVEL% NEQ 0 (
 echo.
 echo Erro no backup! Verifique os dados e tente novamente.
 pause
 exit /b 1
 )
-gbak -user ${entry.user} -pas ${entry.password} -p 8192 -o -c "${destino}\\BANCODADOS_${entry.name}.FBK" "${destino}\\BANCODADOS_${entry.name}.FDB"
+gbak -user ${gbakUser} -pas ${gbakPassword} -p 8192 -o -c "${destino}\\BANCODADOS_${entry.name}.FBK" "${destino}\\BANCODADOS_${entry.name}.FDB"
 del "${destino}\\BANCODADOS_${entry.name}.FBK"
 cd "${winrarPath}"
 rar.exe a -t "${destino}\\BANCODADOS ${entry.name}.rar" "${destino}\\*.FDB"
@@ -127,6 +129,14 @@ pause
 
             {showConfig && (
               <div className="space-y-3 rounded-xl border border-border/50 p-4">
+                <div>
+                  <label className="text-xs text-muted-foreground mb-1 block">Usuário Firebird</label>
+                  <input className={fieldClass} value={gbakUser} onChange={(e) => setGbakUser(e.target.value)} />
+                </div>
+                <div>
+                  <label className="text-xs text-muted-foreground mb-1 block">Senha Firebird</label>
+                  <input className={fieldClass} type="password" value={gbakPassword} onChange={(e) => setGbakPassword(e.target.value)} />
+                </div>
                 <div>
                   <label className="text-xs text-muted-foreground mb-1 block">Caminho remoto do Firebird (servidor)</label>
                   <input className={fieldClass} value={firebirdRemotePath} onChange={(e) => setFirebirdRemotePath(e.target.value)} />
