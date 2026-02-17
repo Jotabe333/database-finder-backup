@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { DatabaseEntry } from "@/types/database";
 import RegisterForm from "@/components/RegisterForm";
 import DetailView from "@/components/DetailView";
+import { Search, Plus, Pencil, Trash2, Database, Server } from "lucide-react";
 
 const INITIAL_DATA: DatabaseEntry[] = [
   { id: "1", name: "RUFINI", cnpj: "12.345.678/0001-90", ip: "10.1.0.144", user: "sa", password: "backup123" },
@@ -40,111 +41,123 @@ const Index = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
-      <div className="win-window w-[520px]">
-        {/* Title bar */}
-        <div className="win-titlebar">
-          <div className="flex items-center gap-2">
-            <span>🖥️</span>
-            <span>Gerador de Backup - Servidor v1.0</span>
-          </div>
-          <div className="flex gap-1">
-            <button className="win-btn-close text-[10px]">—</button>
-            <button className="win-btn-close text-[10px]">□</button>
-            <button className="win-btn-close">✕</button>
-          </div>
-        </div>
+      {/* Background pattern */}
+      <div className="fixed inset-0 opacity-[0.03]" style={{
+        backgroundImage: `radial-gradient(hsl(var(--primary)) 1px, transparent 1px)`,
+        backgroundSize: "30px 30px",
+      }} />
 
-        {/* Menu bar */}
-        <div className="flex gap-0 border-b border-border px-1 py-[2px]" style={{ background: "hsl(var(--card))" }}>
-          <span className="px-2 py-[1px] text-xs cursor-pointer hover:bg-[hsl(var(--win-highlight))] hover:text-[hsl(var(--win-highlight-text))]">Arquivo</span>
-          <span className="px-2 py-[1px] text-xs cursor-pointer hover:bg-[hsl(var(--win-highlight))] hover:text-[hsl(var(--win-highlight-text))]">Editar</span>
-          <span className="px-2 py-[1px] text-xs cursor-pointer hover:bg-[hsl(var(--win-highlight))] hover:text-[hsl(var(--win-highlight-text))]">Ajuda</span>
-        </div>
-
-        {/* Toolbar */}
-        <div className="flex items-center gap-2 px-3 py-2 border-b border-border" style={{ background: "hsl(var(--card))" }}>
-          <button className="win-btn text-xs" onClick={() => { setEditEntry(null); setShowRegister(true); }}>
-            ➕ Novo
-          </button>
-          <button
-            className="win-btn text-xs"
-            disabled={!selectedEntry}
-            onClick={() => { if (selectedEntry) { setEditEntry(selectedEntry); setShowRegister(true); } }}
-          >
-            ✏️ Editar
-          </button>
-          <button
-            className="win-btn text-xs"
-            disabled={!selectedEntry}
-            onClick={() => { if (selectedId) handleDelete(selectedId); }}
-          >
-            🗑️ Excluir
-          </button>
-        </div>
-
-        {/* Search */}
-        <div className="flex items-center gap-2 px-3 py-2" style={{ background: "hsl(var(--card))" }}>
-          <label className="text-xs">🔍 Pesquisar:</label>
-          <input
-            className="win-input flex-1"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Digite o nome do banco de dados..."
-          />
-        </div>
-
-        {/* List */}
-        <div className="px-3 pb-2" style={{ background: "hsl(var(--card))" }}>
-          <div className="win-list h-[200px]">
-            {/* Header */}
-            <div className="flex border-b-2 border-border px-1 py-1 text-[11px] font-bold" style={{ background: "hsl(var(--win-button-face))" }}>
-              <span className="w-[140px]">Nome</span>
-              <span className="w-[150px]">CNPJ</span>
-              <span className="flex-1">IP</span>
-            </div>
-            {/* Items */}
-            {filtered.length === 0 ? (
-              <div className="p-3 text-xs text-center" style={{ color: "hsl(var(--muted-foreground))" }}>
-                Nenhum registro encontrado.
+      <div className="relative w-full max-w-[600px]">
+        {/* Main window */}
+        <div className="glass-surface rounded-2xl overflow-hidden glow-border">
+          {/* Header */}
+          <div className="px-6 py-5 border-b border-border/50">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Server className="w-5 h-5 text-primary" />
               </div>
-            ) : (
-              filtered.map((entry) => (
-                <div
-                  key={entry.id}
-                  className={`win-list-item flex ${selectedId === entry.id ? "selected" : ""}`}
-                  onClick={() => setSelectedId(entry.id)}
-                  onDoubleClick={() => setShowDetail(entry)}
-                >
-                  <span className="w-[140px] truncate">{entry.name}</span>
-                  <span className="w-[150px] truncate">{entry.cnpj}</span>
-                  <span className="flex-1 truncate">{entry.ip}</span>
-                </div>
-              ))
-            )}
+              <div>
+                <h1 className="text-lg font-semibold text-foreground">Gerador de Backup</h1>
+                <p className="text-xs text-muted-foreground">Gerenciamento de servidores</p>
+              </div>
+            </div>
           </div>
-        </div>
 
-        {/* Bottom buttons */}
-        <div className="flex justify-between items-center px-3 py-2 border-t border-border" style={{ background: "hsl(var(--card))" }}>
-          <span className="text-[11px]" style={{ color: "hsl(var(--muted-foreground))" }}>
-            {filtered.length} registro(s)
-          </span>
-          <div className="flex gap-2">
+          {/* Search + Actions */}
+          <div className="px-6 py-4 flex items-center gap-3">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <input
+                className="w-full bg-input rounded-lg pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Pesquisar banco de dados..."
+              />
+            </div>
             <button
-              className="win-btn"
-              disabled={!selectedEntry}
-              onClick={() => { if (selectedEntry) setShowDetail(selectedEntry); }}
+              className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 rounded-lg text-sm font-medium hover:brightness-110 transition-all"
+              onClick={() => { setEditEntry(null); setShowRegister(true); }}
             >
-              Detalhes
+              <Plus className="w-4 h-4" />
+              Novo
             </button>
-            <button className="win-btn">Cancelar</button>
-            <button className="win-btn">Fechar</button>
           </div>
-        </div>
 
-        {/* Status bar */}
-        <div className="win-status-bar">
-          Pronto
+          {/* Table */}
+          <div className="px-6">
+            <div className="rounded-xl border border-border/50 overflow-hidden">
+              {/* Table header */}
+              <div className="flex items-center px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider bg-muted/30">
+                <span className="w-[160px]">Nome</span>
+                <span className="w-[170px]">CNPJ</span>
+                <span className="flex-1">IP</span>
+                <span className="w-[80px] text-right">Ações</span>
+              </div>
+
+              {/* Table body */}
+              <div className="max-h-[260px] overflow-y-auto">
+                {filtered.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">
+                    <Database className="w-8 h-8 mb-2 opacity-40" />
+                    <span className="text-sm">Nenhum registro encontrado</span>
+                  </div>
+                ) : (
+                  filtered.map((entry) => (
+                    <div
+                      key={entry.id}
+                      className={`flex items-center px-4 py-3 text-sm cursor-pointer transition-colors border-t border-border/30 ${
+                        selectedId === entry.id
+                          ? "bg-primary/10 border-l-2 border-l-primary"
+                          : "hover:bg-secondary/40"
+                      }`}
+                      onClick={() => setSelectedId(entry.id)}
+                      onDoubleClick={() => setShowDetail(entry)}
+                    >
+                      <span className="w-[160px] font-medium text-foreground truncate">{entry.name}</span>
+                      <span className="w-[170px] text-muted-foreground truncate text-xs font-mono">{entry.cnpj}</span>
+                      <span className="flex-1 text-muted-foreground truncate text-xs font-mono">{entry.ip}</span>
+                      <div className="w-[80px] flex justify-end gap-1">
+                        <button
+                          className="p-1.5 rounded-md hover:bg-secondary/60 text-muted-foreground hover:text-foreground transition-colors"
+                          onClick={(e) => { e.stopPropagation(); setEditEntry(entry); setShowRegister(true); }}
+                        >
+                          <Pencil className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          className="p-1.5 rounded-md hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors"
+                          onClick={(e) => { e.stopPropagation(); handleDelete(entry.id); }}
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="px-6 py-4 flex items-center justify-between">
+            <span className="text-xs text-muted-foreground">
+              {filtered.length} registro(s)
+            </span>
+            <div className="flex gap-2">
+              <button
+                className="px-4 py-2 rounded-lg text-sm font-medium bg-secondary text-secondary-foreground hover:brightness-110 transition-all disabled:opacity-40"
+                disabled={!selectedEntry}
+                onClick={() => { if (selectedEntry) setShowDetail(selectedEntry); }}
+              >
+                Detalhes
+              </button>
+              <button className="px-4 py-2 rounded-lg text-sm font-medium bg-secondary text-secondary-foreground hover:brightness-110 transition-all">
+                Cancelar
+              </button>
+              <button className="px-4 py-2 rounded-lg text-sm font-medium bg-secondary text-secondary-foreground hover:brightness-110 transition-all">
+                Fechar
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -156,16 +169,11 @@ const Index = () => {
           onCancel={() => { setShowRegister(false); setEditEntry(null); }}
         />
       )}
-
       {showDetail && (
         <DetailView
           entry={showDetail}
           onClose={() => setShowDetail(null)}
-          onEdit={() => {
-            setEditEntry(showDetail);
-            setShowDetail(null);
-            setShowRegister(true);
-          }}
+          onEdit={() => { setEditEntry(showDetail); setShowDetail(null); setShowRegister(true); }}
         />
       )}
     </div>

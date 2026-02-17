@@ -1,4 +1,6 @@
 import type { DatabaseEntry } from "@/types/database";
+import { X, Server, Copy } from "lucide-react";
+import { toast } from "sonner";
 
 interface Props {
   entry: DatabaseEntry;
@@ -7,47 +9,56 @@ interface Props {
 }
 
 const DetailView = ({ entry, onClose, onEdit }: Props) => {
+  const copyToClipboard = (text: string, label: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success(`${label} copiado!`);
+  };
+
+  const InfoRow = ({ label, value, mono = false }: { label: string; value: string; mono?: boolean }) => (
+    <div className="flex items-center justify-between py-2.5 border-b border-border/30 last:border-0">
+      <span className="text-xs text-muted-foreground">{label}</span>
+      <div className="flex items-center gap-2">
+        <span className={`text-sm text-foreground ${mono ? "font-mono" : ""}`}>{value || "—"}</span>
+        {value && (
+          <button onClick={() => copyToClipboard(value, label)} className="p-1 rounded hover:bg-secondary/60 text-muted-foreground hover:text-foreground transition-colors">
+            <Copy className="w-3 h-3" />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50" style={{ background: "rgba(0,0,0,0.3)" }}>
-      <div className="win-window w-[360px]">
-        <div className="win-titlebar">
-          <div className="flex items-center gap-2">
-            <span>🗄️</span>
-            <span>Detalhes - {entry.name}</span>
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-background/60 backdrop-blur-sm">
+      <div className="glass-surface rounded-2xl w-[400px] glow-border overflow-hidden">
+        <div className="px-6 py-4 border-b border-border/50 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Server className="w-4 h-4 text-primary" />
+            </div>
+            <h2 className="font-semibold text-foreground">{entry.name}</h2>
           </div>
-          <button className="win-btn-close" onClick={onClose}>✕</button>
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-secondary/60 text-muted-foreground hover:text-foreground transition-colors">
+            <X className="w-4 h-4" />
+          </button>
         </div>
 
-        <div className="p-4">
-          <fieldset className="win-fieldset">
-            <legend>Informações</legend>
-            <div className="space-y-2 text-xs">
-              <div className="flex">
-                <span className="w-20 font-bold">Nome:</span>
-                <span>{entry.name}</span>
-              </div>
-              <div className="flex">
-                <span className="w-20 font-bold">CNPJ:</span>
-                <span>{entry.cnpj || "—"}</span>
-              </div>
-              <div className="flex">
-                <span className="w-20 font-bold">IP:</span>
-                <span>{entry.ip}</span>
-              </div>
-              <div className="flex">
-                <span className="w-20 font-bold">Usuário:</span>
-                <span>{entry.user || "—"}</span>
-              </div>
-              <div className="flex">
-                <span className="w-20 font-bold">Senha:</span>
-                <span>{entry.password ? "••••••••" : "—"}</span>
-              </div>
-            </div>
-          </fieldset>
+        <div className="p-6">
+          <div className="rounded-xl border border-border/50 px-4">
+            <InfoRow label="Nome" value={entry.name} />
+            <InfoRow label="CNPJ" value={entry.cnpj} mono />
+            <InfoRow label="IP" value={entry.ip} mono />
+            <InfoRow label="Usuário" value={entry.user} />
+            <InfoRow label="Senha" value={entry.password ? "••••••••" : ""} />
+          </div>
 
-          <div className="flex justify-end gap-2 pt-3">
-            <button className="win-btn" onClick={onEdit}>✏️ Editar</button>
-            <button className="win-btn" onClick={onClose}>Fechar</button>
+          <div className="flex justify-end gap-2 pt-5">
+            <button className="px-4 py-2.5 rounded-lg text-sm font-medium bg-secondary text-secondary-foreground hover:brightness-110 transition-all" onClick={onClose}>
+              Fechar
+            </button>
+            <button className="px-5 py-2.5 rounded-lg text-sm font-medium bg-primary text-primary-foreground hover:brightness-110 transition-all" onClick={onEdit}>
+              Editar
+            </button>
           </div>
         </div>
       </div>
