@@ -121,8 +121,9 @@ pause`;
   const batContent = buildBat();
 
   const handleDownload = () => {
-    // Sem BOM — o BOM quebra o @echo off no cmd.exe. chcp 65001 já garante UTF-8.
-    const blob = new Blob([batContent], { type: "application/x-bat;charset=utf-8" });
+    // Converte LF para CRLF (cmd.exe exige \r\n) e salva sem BOM.
+    const crlfContent = batContent.replace(/\n/g, "\r\n");
+    const blob = new Blob([crlfContent], { type: "application/x-bat;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
