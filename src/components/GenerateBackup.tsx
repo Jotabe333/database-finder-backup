@@ -1,5 +1,5 @@
 import type { DatabaseEntry } from "@/types/database";
-import { X, Server, Download, Copy, CheckCircle } from "lucide-react";
+import { X, Server, Download, Copy, CheckCircle, Settings2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -10,25 +10,38 @@ interface Props {
 
 const GenerateBackup = ({ entry, onClose }: Props) => {
   const [downloaded, setDownloaded] = useState(false);
+  const [showConfig, setShowConfig] = useState(false);
 
-  const destino = entry.backupPath || "C:\\Users\\%USERNAME%\\Desktop\\BDS";
+  // Caminhos configuráveis
+  const [firebirdRemotePath, setFirebirdRemotePath] = useState("/firebird/data");
+  const [firebirdLocalPath, setFirebirdLocalPath] = useState("C:\\Program Files\\Firebird\\Firebird_5_0");
+  const [winrarPath, setWinrarPath] = useState("C:\\Program Files\\WinRAR");
+  const [destino, setDestino] = useState(entry.backupPath || "C:\\Users\\%USERNAME%\\Desktop\\BDS");
 
-  const batContent = `@echo off
+  const buildBat = () => {
+    return `@echo off
 title Backup/Restore - ${entry.name}
 echo.
 echo ============================================
 echo   Backup do Banco: "${entry.name}"
 echo   Servidor: ${entry.ip}
+echo   Usuario: ${entry.user}
 echo ============================================
 echo.
 echo Iniciando Backup do Banco: "${entry.name}" ...
 C:
-cd C:\\Program Files\\Firebird\\Firebird_5_0
+cd "${firebirdLocalPath}"
 echo Hora inicio: %time%
-gbak -l -t -user ${entry.user} -password ${entry.password} "${entry.ip}:/firebird/data/BANCODADOS_${entry.name}.FDB" "${destino}\\BANCODADOS_${entry.name}.FBK"
+gbak -l -t -user ${entry.user} -password ${entry.password} "${entry.ip}:${firebirdRemotePath}/BANCODADOS_${entry.name}.FDB" "${destino}\\BANCODADOS_${entry.name}.FBK"
+if %ERRORLEVEL% NEQ 0 (
+echo.
+echo Erro no backup! Verifique os dados e tente novamente.
+pause
+exit /b 1
+)
 gbak -user ${entry.user} -pas ${entry.password} -p 8192 -o -c "${destino}\\BANCODADOS_${entry.name}.FBK" "${destino}\\BANCODADOS_${entry.name}.FDB"
 del "${destino}\\BANCODADOS_${entry.name}.FBK"
-cd C:\\Program Files\\WinRAR
+cd "${winrarPath}"
 rar.exe a -t "${destino}\\BANCODADOS ${entry.name}.rar" "${destino}\\*.FDB"
 del "${destino}\\*.FDB"
 echo.
@@ -46,9 +59,12 @@ echo.
 echo Erro!!! Verifique os dados e tente novamente.
 pause
 )`;
+  };
+
+  const batContent = buildBat();
 
   const handleDownload = () => {
-    const blob = new Blob([batContent], { type: "application/bat" });
+    const blob = new Blob([batContent], { type: "application/x-bat" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -65,9 +81,11 @@ pause
     toast.success("Conteúdo do .bat copiado!");
   };
 
+  const fieldClass = "w-full bg-input rounded-lg px-3 py-2 text-xs font-mono text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/30 transition-all";
+
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-background/60 backdrop-blur-sm">
-      <div className="glass-surface rounded-2xl w-[540px] max-h-[90vh] glow-border overflow-hidden flex flex-col">
+      <div className="glass-surface rounded-2xl w-[560px] max-h-[90vh] glow-border overflow-hidden flex flex-col">
         <div className="px-6 py-4 border-b border-border/50 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -84,14 +102,14 @@ pause
         </div>
 
         <div className="p-6 space-y-4 overflow-y-auto">
-          {/* Info summary */}
-          <div className="rounded-xl border border-border/50 px-4 py-3 space-y-2">
+          {/* Dados do banco selecionado */}
+          <div className="rounded-xl border border-border/50 px-4 py-3 grid grid-cols-2 gap-x-6 gap-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Banco:</span>
               <span className="font-medium text-foreground">{entry.name}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Servidor:</span>
+              <span className="text-muted-foreground">IP:</span>
               <span className="font-mono text-xs text-foreground">{entry.ip}</span>
             </div>
             <div className="flex justify-between text-sm">
@@ -99,9 +117,41 @@ pause
               <span className="text-foreground">{entry.user}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Destino:</span>
-              <span className="font-mono text-xs text-foreground">{destino}</span>
+              <span className="text-muted-foreground">Senha:</span>
+              <span className="text-foreground">••••••••</span>
             </div>
+          </div>
+
+          {/* Configurações de caminhos */}
+          <div>
+            <button
+              onClick={() => setShowConfig(!showConfig)}
+              className="flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors mb-2"
+            >
+              <Settings2 className="w-3.5 h-3.5" />
+              {showConfig ? "Ocultar configurações" : "Configurações de caminhos"}
+            </button>
+
+            {showConfig && (
+              <div className="space-y-3 rounded-xl border border-border/50 p-4">
+                <div>
+                  <label className="text-xs text-muted-foreground mb-1 block">Caminho remoto do Firebird (servidor)</label>
+                  <input className={fieldClass} value={firebirdRemotePath} onChange={(e) => setFirebirdRemotePath(e.target.value)} />
+                </div>
+                <div>
+                  <label className="text-xs text-muted-foreground mb-1 block">Caminho local do Firebird</label>
+                  <input className={fieldClass} value={firebirdLocalPath} onChange={(e) => setFirebirdLocalPath(e.target.value)} />
+                </div>
+                <div>
+                  <label className="text-xs text-muted-foreground mb-1 block">Caminho do WinRAR</label>
+                  <input className={fieldClass} value={winrarPath} onChange={(e) => setWinrarPath(e.target.value)} />
+                </div>
+                <div>
+                  <label className="text-xs text-muted-foreground mb-1 block">Pasta destino do backup</label>
+                  <input className={fieldClass} value={destino} onChange={(e) => setDestino(e.target.value)} />
+                </div>
+              </div>
+            )}
           </div>
 
           {/* BAT preview */}
@@ -116,7 +166,7 @@ pause
                 Copiar
               </button>
             </div>
-            <div className="bg-background/80 rounded-lg p-3 border border-border/50 max-h-[200px] overflow-y-auto">
+            <div className="bg-background/80 rounded-lg p-3 border border-border/50 max-h-[220px] overflow-y-auto">
               <pre className="text-[11px] font-mono text-foreground/80 whitespace-pre-wrap leading-relaxed">{batContent}</pre>
             </div>
           </div>
