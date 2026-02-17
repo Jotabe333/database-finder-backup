@@ -113,14 +113,6 @@ pause
               <span className="text-muted-foreground">IP:</span>
               <span className="font-mono text-xs text-foreground">{entry.ip}</span>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Usuário:</span>
-              <span className="text-foreground">{entry.user}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Senha:</span>
-              <span className="text-foreground">••••••••</span>
-            </div>
           </div>
 
           {/* Configurações de caminhos */}
