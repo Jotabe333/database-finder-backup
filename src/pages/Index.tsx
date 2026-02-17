@@ -1,25 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { DatabaseEntry } from "@/types/database";
 import RegisterForm from "@/components/RegisterForm";
 import DetailView from "@/components/DetailView";
 import GenerateBackup from "@/components/GenerateBackup";
 import { Search, Plus, Pencil, Trash2, Database, Server, Copy, Play, FolderOpen } from "lucide-react";
 
-const INITIAL_DATA: DatabaseEntry[] = [
-  { id: "1", name: "RUFINI", cnpj: "12.345.678/0001-90", ip: "10.1.0.144", user: "sa", password: "backup123", backupPath: "D:\\Backups\\RUFINI" },
-  { id: "2", name: "COMERCIAL_SP", cnpj: "98.765.432/0001-10", ip: "10.1.0.200", user: "admin", password: "srv2024", backupPath: "E:\\Backups\\COMERCIAL" },
-  { id: "3", name: "INDUSTRIA_RJ", cnpj: "11.222.333/0001-44", ip: "192.168.1.50", user: "dba", password: "ind@2024", backupPath: "C:\\SQL_Backups" },
-];
+const STORAGE_KEY = "backup-generator-entries";
+const SAVE_PATH_KEY = "backup-generator-save-path";
+
+const loadEntries = (): DatabaseEntry[] => {
+  try {
+    const data = localStorage.getItem(STORAGE_KEY);
+    if (data) return JSON.parse(data);
+  } catch {}
+  return [];
+};
 
 const Index = () => {
-  const [entries, setEntries] = useState<DatabaseEntry[]>(INITIAL_DATA);
+  const [entries, setEntries] = useState<DatabaseEntry[]>(loadEntries);
   const [search, setSearch] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showDetail, setShowDetail] = useState<DatabaseEntry | null>(null);
   const [showRegister, setShowRegister] = useState(false);
   const [editEntry, setEditEntry] = useState<DatabaseEntry | null>(null);
   const [showGenerate, setShowGenerate] = useState<DatabaseEntry | null>(null);
-  const [savePath, setSavePath] = useState("C:\\Users\\%USERNAME%\\Desktop\\BDS");
+  const [savePath, setSavePath] = useState(() => localStorage.getItem(SAVE_PATH_KEY) || "C:\\Users\\%USERNAME%\\Desktop\\BDS");
+
+  // Persist entries
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+  }, [entries]);
+
+  // Persist save path
+  useEffect(() => {
+    localStorage.setItem(SAVE_PATH_KEY, savePath);
+  }, [savePath]);
 
   const filtered = entries.filter((e) =>
     e.name.toLowerCase().includes(search.toLowerCase())
