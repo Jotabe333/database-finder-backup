@@ -121,9 +121,8 @@ pause`;
   const batContent = buildBat();
 
   const handleDownload = () => {
-    // BOM + content para garantir encoding correto no Windows
-    const BOM = "\uFEFF";
-    const blob = new Blob([BOM + batContent], { type: "application/x-bat;charset=utf-8" });
+    // Sem BOM — o BOM quebra o @echo off no cmd.exe. chcp 65001 já garante UTF-8.
+    const blob = new Blob([batContent], { type: "application/x-bat;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
