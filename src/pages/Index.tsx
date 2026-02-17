@@ -2,7 +2,8 @@ import { useState } from "react";
 import type { DatabaseEntry } from "@/types/database";
 import RegisterForm from "@/components/RegisterForm";
 import DetailView from "@/components/DetailView";
-import { Search, Plus, Pencil, Trash2, Database, Server, Copy } from "lucide-react";
+import GenerateBackup from "@/components/GenerateBackup";
+import { Search, Plus, Pencil, Trash2, Database, Server, Copy, Play } from "lucide-react";
 
 const INITIAL_DATA: DatabaseEntry[] = [
   { id: "1", name: "RUFINI", cnpj: "12.345.678/0001-90", ip: "10.1.0.144", user: "sa", password: "backup123", backupPath: "D:\\Backups\\RUFINI" },
@@ -17,6 +18,7 @@ const Index = () => {
   const [showDetail, setShowDetail] = useState<DatabaseEntry | null>(null);
   const [showRegister, setShowRegister] = useState(false);
   const [editEntry, setEditEntry] = useState<DatabaseEntry | null>(null);
+  const [showGenerate, setShowGenerate] = useState<DatabaseEntry | null>(null);
 
   const filtered = entries.filter((e) =>
     e.name.toLowerCase().includes(search.toLowerCase())
@@ -158,6 +160,14 @@ const Index = () => {
             </span>
             <div className="flex gap-2">
               <button
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-primary text-primary-foreground hover:brightness-110 transition-all disabled:opacity-40"
+                disabled={!selectedEntry}
+                onClick={() => { if (selectedEntry) setShowGenerate(selectedEntry); }}
+              >
+                <Play className="w-3.5 h-3.5" />
+                Gerar Backup
+              </button>
+              <button
                 className="px-4 py-2 rounded-lg text-sm font-medium bg-secondary text-secondary-foreground hover:brightness-110 transition-all disabled:opacity-40"
                 disabled={!selectedEntry}
                 onClick={() => { if (selectedEntry) setShowDetail(selectedEntry); }}
@@ -188,6 +198,12 @@ const Index = () => {
           entry={showDetail}
           onClose={() => setShowDetail(null)}
           onEdit={() => { setEditEntry(showDetail); setShowDetail(null); setShowRegister(true); }}
+        />
+      )}
+      {showGenerate && (
+        <GenerateBackup
+          entry={showGenerate}
+          onClose={() => setShowGenerate(null)}
         />
       )}
     </div>
