@@ -124,15 +124,21 @@ const Index = () => {
                   <Server className="w-3.5 h-3.5 text-primary" />
                 </div>
                 <h1 className="text-sm font-semibold text-foreground leading-tight">Gerador de Backup</h1>
-              </div>
-              <div className="flex items-center gap-1">
                 <button
                   onClick={() => setIsDark(!isDark)}
-                  className="p-1.5 rounded-md hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+                  className="relative w-9 h-5 rounded-full bg-secondary border border-border/50 flex items-center transition-colors hover:bg-surface-hover"
                   title={isDark ? "Tema claro" : "Tema escuro"}
                 >
-                  {isDark ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
+                  <span
+                    className={`absolute top-0.5 w-4 h-4 rounded-full bg-primary flex items-center justify-center shadow-sm transition-all duration-200 ${
+                      isDark ? "left-[18px]" : "left-0.5"
+                    }`}
+                  >
+                    {isDark ? <Moon className="w-2.5 h-2.5 text-primary-foreground" /> : <Sun className="w-2.5 h-2.5 text-primary-foreground" />}
+                  </span>
                 </button>
+              </div>
+              <div className="flex items-center gap-1">
                 <div className="relative">
                 <button
                   onClick={() => setShowMenu(!showMenu)}
