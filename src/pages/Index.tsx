@@ -276,11 +276,8 @@ const Index = () => {
               <button
                 className="p-1.5 rounded-md bg-secondary hover:brightness-110 text-muted-foreground hover:text-foreground border border-border/50 transition-all shrink-0"
                 title="Selecionar pasta"
-                onClick={async () => {
-                  try {
-                    const dirHandle = await (window as any).showDirectoryPicker();
-                    setSavePath(dirHandle.name);
-                  } catch {}
+                onClick={() => {
+                  toast.info("O navegador não permite ler o caminho completo da pasta. Digite o caminho manualmente no campo ao lado.");
                 }}
               >
                 <FolderOpen className="w-3.5 h-3.5" />
