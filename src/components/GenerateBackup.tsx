@@ -39,27 +39,27 @@ echo Hora inicio: %time%
 echo [1/5] Executando backup (gbak)...
 cd /d "${firebirdLocalPath}"
 gbak -l -t -user ${gbakUser} -password ${gbakPassword} "${entry.ip}:${firebirdRemotePath}/BANCODADOS_${cleanName}.FDB" "${destino}\\BANCODADOS_${cleanName}.FBK"
-if %ERRORLEVEL% NEQ 0 (
+if not exist "${destino}\\BANCODADOS_${cleanName}.FBK" (
   echo.
-  echo [ERRO] Falha ao executar o backup do banco "BANCODADOS_${cleanName}".
+  echo [ERRO] Falha ao gerar o arquivo FBK do banco "BANCODADOS_${cleanName}".
   echo   Verifique: IP do servidor, credenciais, caminho remoto do banco.
-  echo   Codigo de erro: %ERRORLEVEL%
   echo.
   set TEVE_ERRO=1
   goto :PROXIMO_${cleanName}
 )
+echo   [OK] FBK gerado com sucesso.
 
 echo [2/5] Executando restore local...
 gbak -user ${gbakUser} -pas ${gbakPassword} -p 8192 -o -c "${destino}\\BANCODADOS_${cleanName}.FBK" "${destino}\\BANCODADOS_${cleanName}.FDB"
-if %ERRORLEVEL% NEQ 0 (
+if not exist "${destino}\\BANCODADOS_${cleanName}.FDB" (
   echo.
   echo [ERRO] Falha ao restaurar o banco "BANCODADOS_${cleanName}".
   echo   O arquivo .FBK pode estar corrompido ou sem espaco em disco.
-  echo   Codigo de erro: %ERRORLEVEL%
   echo.
   set TEVE_ERRO=1
   goto :PROXIMO_${cleanName}
 )
+echo   [OK] FDB restaurado com sucesso.
 
 echo [3/5] Removendo arquivo .FBK temporario...
 del "${destino}\\BANCODADOS_${cleanName}.FBK"
@@ -67,15 +67,15 @@ del "${destino}\\BANCODADOS_${cleanName}.FBK"
 echo [4/5] Compactando com WinRAR...
 cd /d "${winrarPath}"
 rar.exe a -t "${destino}\\BANCODADOS_${cleanName}.rar" "${destino}\\*.FDB"
-if %ERRORLEVEL% NEQ 0 (
+if not exist "${destino}\\BANCODADOS_${cleanName}.rar" (
   echo.
   echo [ERRO] Falha ao compactar com WinRAR.
   echo   Verifique se o WinRAR esta instalado em: ${winrarPath}
-  echo   Codigo de erro: %ERRORLEVEL%
   echo.
   set TEVE_ERRO=1
   goto :PROXIMO_${cleanName}
 )
+echo   [OK] RAR compactado com sucesso.
 
 echo [5/5] Limpando arquivos .FDB temporarios...
 del "${destino}\\*.FDB"
