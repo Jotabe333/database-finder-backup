@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { toast } from "sonner";
 import type { DatabaseEntry } from "@/types/database";
 import RegisterForm from "@/components/RegisterForm";
 import DetailView from "@/components/DetailView";
@@ -73,6 +74,7 @@ const Index = () => {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     setShowMenu(false);
+    toast.success(`${entries.length} banco(s) exportado(s)!`);
   };
 
   const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,8 +86,13 @@ const Index = () => {
         const data = JSON.parse(ev.target?.result as string);
         if (Array.isArray(data)) {
           setEntries(data);
+          toast.success(`${data.length} banco(s) importado(s) com sucesso!`);
+        } else {
+          toast.error("Arquivo inválido: formato inesperado.");
         }
-      } catch {}
+      } catch {
+        toast.error("Erro ao ler o arquivo. Verifique se é um JSON válido.");
+      }
     };
     reader.readAsText(file);
     setShowMenu(false);
