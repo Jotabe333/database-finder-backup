@@ -4,7 +4,8 @@ import type { DatabaseEntry } from "@/types/database";
 import RegisterForm from "@/components/RegisterForm";
 import DetailView from "@/components/DetailView";
 import GenerateBackup from "@/components/GenerateBackup";
-import { Search, Plus, Pencil, Trash2, Database, Server, Copy, Play, FolderOpen, MoreVertical, Upload, Download, Sun, Moon, CheckSquare, Square } from "lucide-react";
+import SettingsModal from "@/components/SettingsModal";
+import { Search, Plus, Pencil, Trash2, Database, Server, Copy, Play, FolderOpen, MoreVertical, Upload, Download, Sun, Moon, CheckSquare, Square, Settings2 } from "lucide-react";
 
 const STORAGE_KEY = "backup-generator-entries";
 const SAVE_PATH_KEY = "backup-generator-save-path";
@@ -27,6 +28,7 @@ const Index = () => {
   const [showGenerate, setShowGenerate] = useState(false);
   const [savePath, setSavePath] = useState(() => localStorage.getItem(SAVE_PATH_KEY) || "C:\\Users\\%USERNAME%\\Desktop\\BDS");
   const [showMenu, setShowMenu] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDark, setIsDark] = useState(() => {
     const saved = localStorage.getItem("theme");
@@ -185,6 +187,14 @@ const Index = () => {
                         >
                           <Upload className="w-3.5 h-3.5" />
                           Importar Bancos
+                        </button>
+                        <div className="border-t border-border/50 my-1" />
+                        <button
+                          onClick={() => { setShowSettings(true); setShowMenu(false); }}
+                          className="flex items-center gap-2 w-full px-3 py-2 text-xs text-foreground hover:bg-secondary transition-colors"
+                        >
+                          <Settings2 className="w-3.5 h-3.5" />
+                          Configurações
                         </button>
                       </div>
                     </>
@@ -374,6 +384,9 @@ const Index = () => {
           savePath={savePath}
           onClose={() => setShowGenerate(false)}
         />
+      )}
+      {showSettings && (
+        <SettingsModal onClose={() => setShowSettings(false)} />
       )}
     </div>
   );

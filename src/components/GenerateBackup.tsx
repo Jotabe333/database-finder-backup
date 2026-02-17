@@ -1,7 +1,8 @@
 import type { DatabaseEntry } from "@/types/database";
-import { X, Server, Download, Copy, CheckCircle, Settings2, ChevronDown, ChevronRight, AlertTriangle } from "lucide-react";
+import { X, Server, Download, Copy, CheckCircle, ChevronDown, ChevronRight, AlertTriangle } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { getConfigPaths } from "@/components/SettingsModal";
 
 interface Props {
   entries: DatabaseEntry[];
@@ -11,12 +12,12 @@ interface Props {
 
 const GenerateBackup = ({ entries, savePath, onClose }: Props) => {
   const [downloaded, setDownloaded] = useState(false);
-  const [showConfig, setShowConfig] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
 
-  const [firebirdLocalPath, setFirebirdLocalPath] = useState("C:\\Program Files\\Firebird\\Firebird_5_0");
-  const [winrarPath, setWinrarPath] = useState("C:\\Program Files\\WinRAR");
-  const [destino, setDestino] = useState(savePath || "C:\\Users\\%USERNAME%\\Desktop\\BDS");
+  const config = getConfigPaths();
+  const firebirdLocalPath = config.firebirdLocalPath;
+  const winrarPath = config.winrarPath;
+  const destino = savePath || "C:\\Users\\%USERNAME%\\Desktop\\BDS";
 
   const buildBatForEntry = (entry: DatabaseEntry) => {
     const cleanName = entry.name.replace(/^BANCODADOS_/i, "");
@@ -201,32 +202,17 @@ pause`;
             </div>
           </div>
 
-          {/* Config toggle */}
-          <div>
-            <button
-              onClick={() => setShowConfig(!showConfig)}
-              className="flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground hover:text-foreground transition-colors mb-2"
-            >
-              <Settings2 className="w-3 h-3" />
-              {showConfig ? "Ocultar configurações" : "Configurações de caminhos"}
-            </button>
-
-            {showConfig && (
-              <div className="space-y-2.5 rounded-md border border-border p-3">
-                <div>
-                  <label className="text-[10px] text-muted-foreground mb-0.5 block">Caminho local do Firebird</label>
-                  <input className={fieldClass} value={firebirdLocalPath} onChange={(e) => setFirebirdLocalPath(e.target.value)} />
-                </div>
-                <div>
-                  <label className="text-[10px] text-muted-foreground mb-0.5 block">Caminho do WinRAR</label>
-                  <input className={fieldClass} value={winrarPath} onChange={(e) => setWinrarPath(e.target.value)} />
-                </div>
-                <div>
-                  <label className="text-[10px] text-muted-foreground mb-0.5 block">Pasta destino do backup</label>
-                  <input className={fieldClass} value={destino} onChange={(e) => setDestino(e.target.value)} />
-                </div>
-              </div>
-            )}
+          {/* Info de caminhos */}
+          <div className="rounded-md border border-border/50 px-3 py-2 space-y-0.5">
+            <p className="text-[10px] text-muted-foreground">
+              <span className="font-medium">Firebird:</span> <span className="font-mono">{firebirdLocalPath}</span>
+            </p>
+            <p className="text-[10px] text-muted-foreground">
+              <span className="font-medium">WinRAR:</span> <span className="font-mono">{winrarPath}</span>
+            </p>
+            <p className="text-[10px] text-muted-foreground">
+              <span className="font-medium">Destino:</span> <span className="font-mono">{destino}</span>
+            </p>
           </div>
 
           {/* BAT preview */}
