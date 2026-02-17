@@ -309,12 +309,6 @@ const Index = () => {
               >
                 Detalhes
               </button>
-              <button className="px-3 py-1.5 rounded-md text-[11px] font-medium bg-secondary text-secondary-foreground hover:brightness-110 border border-border/50 transition-all">
-                Cancelar
-              </button>
-              <button className="px-3 py-1.5 rounded-md text-[11px] font-medium bg-secondary text-secondary-foreground hover:brightness-110 border border-border/50 transition-all">
-                Fechar
-              </button>
             </div>
           </div>
         </div>
