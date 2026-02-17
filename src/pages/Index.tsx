@@ -104,10 +104,7 @@ const Index = () => {
                 <div className="w-7 h-7 rounded-md bg-primary/15 flex items-center justify-center">
                   <Server className="w-3.5 h-3.5 text-primary" />
                 </div>
-                <div>
-                  <h1 className="text-sm font-semibold text-foreground leading-tight">Gerador de Backup</h1>
-                  <p className="text-[10px] text-muted-foreground leading-tight">Gerenciamento de servidores</p>
-                </div>
+                <h1 className="text-sm font-semibold text-foreground leading-tight">Gerador de Backup</h1>
               </div>
               <div className="flex items-center gap-1">
                 <div className="relative">
