@@ -1,96 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 0 0% 75.3%;
+    --foreground: 0 0% 0%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 0 0% 83.5%;
+    --card-foreground: 0 0% 0%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 83.5%;
+    --popover-foreground: 0 0% 0%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 212 100% 30%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 0 0% 83.5%;
+    --secondary-foreground: 0 0% 0%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 0 0% 75%;
+    --muted-foreground: 0 0% 30%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 212 100% 47%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 0 0% 63%;
+    --input: 0 0% 100%;
+    --ring: 212 100% 47%;
 
-    --radius: 0.5rem;
+    --radius: 0px;
 
-    --sidebar-background: 0 0% 98%;
+    /* Windows XP style tokens */
+    --win-titlebar: 212 100% 30%;
+    --win-titlebar-active: 212 100% 42%;
+    --win-titlebar-foreground: 0 0% 100%;
+    --win-border-light: 0 0% 95%;
+    --win-border-dark: 0 0% 40%;
+    --win-border-shadow: 0 0% 55%;
+    --win-button-face: 0 0% 83.5%;
+    --win-field-bg: 0 0% 100%;
+    --win-highlight: 212 100% 47%;
+    --win-highlight-text: 0 0% 100%;
+    --win-green: 120 60% 35%;
+    --win-status-bar: 0 0% 90%;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 0 0% 83.5%;
+    --sidebar-foreground: 0 0% 0%;
+    --sidebar-primary: 212 100% 30%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 212 100% 47%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 0 0% 63%;
+    --sidebar-ring: 212 100% 47%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --background: 0 0% 75.3%;
+    --foreground: 0 0% 0%;
+    --card: 0 0% 83.5%;
+    --card-foreground: 0 0% 0%;
+    --popover: 0 0% 83.5%;
+    --popover-foreground: 0 0% 0%;
+    --primary: 212 100% 30%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 83.5%;
+    --secondary-foreground: 0 0% 0%;
+    --muted: 0 0% 75%;
+    --muted-foreground: 0 0% 30%;
+    --accent: 212 100% 47%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 63%;
+    --input: 0 0% 100%;
+    --ring: 212 100% 47%;
+    --sidebar-background: 0 0% 83.5%;
+    --sidebar-foreground: 0 0% 0%;
+    --sidebar-primary: 212 100% 30%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 212 100% 47%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 0 0% 63%;
+    --sidebar-ring: 212 100% 47%;
   }
 }
 
@@ -101,5 +98,154 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Segoe UI', 'Tahoma', 'Geneva', 'Verdana', sans-serif;
+    font-size: 13px;
+  }
+}
+
+@layer components {
+  .win-window {
+    background: hsl(var(--card));
+    border: 2px solid;
+    border-color: hsl(var(--win-border-light)) hsl(var(--win-border-dark)) hsl(var(--win-border-dark)) hsl(var(--win-border-light));
+    box-shadow: 1px 1px 0 hsl(var(--win-border-shadow));
+  }
+
+  .win-titlebar {
+    background: linear-gradient(
+      180deg,
+      hsl(var(--win-titlebar-active)) 0%,
+      hsl(var(--win-titlebar)) 45%,
+      hsl(var(--win-titlebar-active)) 50%,
+      hsl(var(--win-titlebar)) 100%
+    );
+    color: hsl(var(--win-titlebar-foreground));
+    padding: 3px 5px;
+    font-weight: 700;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+  }
+
+  .win-btn {
+    background: hsl(var(--win-button-face));
+    border: 2px solid;
+    border-color: hsl(var(--win-border-light)) hsl(var(--win-border-dark)) hsl(var(--win-border-dark)) hsl(var(--win-border-light));
+    padding: 2px 16px;
+    font-size: 12px;
+    cursor: pointer;
+    min-width: 75px;
+    text-align: center;
+    color: hsl(var(--foreground));
+  }
+
+  .win-btn:active {
+    border-color: hsl(var(--win-border-dark)) hsl(var(--win-border-light)) hsl(var(--win-border-light)) hsl(var(--win-border-dark));
+  }
+
+  .win-btn:focus {
+    outline: 1px dotted hsl(var(--foreground));
+    outline-offset: -4px;
+  }
+
+  .win-btn-close {
+    background: hsl(var(--win-button-face));
+    border: 2px solid;
+    border-color: hsl(var(--win-border-light)) hsl(var(--win-border-dark)) hsl(var(--win-border-dark)) hsl(var(--win-border-light));
+    width: 21px;
+    height: 21px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    line-height: 1;
+    color: hsl(var(--foreground));
+  }
+
+  .win-btn-close:active {
+    border-color: hsl(var(--win-border-dark)) hsl(var(--win-border-light)) hsl(var(--win-border-light)) hsl(var(--win-border-dark));
+  }
+
+  .win-input {
+    background: hsl(var(--win-field-bg));
+    border: 2px solid;
+    border-color: hsl(var(--win-border-shadow)) hsl(var(--win-border-light)) hsl(var(--win-border-light)) hsl(var(--win-border-shadow));
+    padding: 2px 4px;
+    font-size: 12px;
+    font-family: inherit;
+    color: hsl(var(--foreground));
+  }
+
+  .win-input:focus {
+    outline: none;
+  }
+
+  .win-fieldset {
+    border: 2px solid;
+    border-color: hsl(var(--win-border-light)) hsl(var(--win-border-shadow)) hsl(var(--win-border-shadow)) hsl(var(--win-border-light));
+    padding: 8px;
+    margin: 4px 0;
+  }
+
+  .win-fieldset legend {
+    font-size: 12px;
+    padding: 0 4px;
+    color: hsl(var(--foreground));
+  }
+
+  .win-list {
+    background: hsl(var(--win-field-bg));
+    border: 2px solid;
+    border-color: hsl(var(--win-border-shadow)) hsl(var(--win-border-light)) hsl(var(--win-border-light)) hsl(var(--win-border-shadow));
+    overflow-y: auto;
+  }
+
+  .win-list-item {
+    padding: 2px 4px;
+    cursor: pointer;
+    font-size: 12px;
+    color: hsl(var(--foreground));
+  }
+
+  .win-list-item:hover {
+    background: hsl(var(--win-highlight));
+    color: hsl(var(--win-highlight-text));
+  }
+
+  .win-list-item.selected {
+    background: hsl(var(--win-highlight));
+    color: hsl(var(--win-highlight-text));
+  }
+
+  .win-status-bar {
+    background: hsl(var(--win-status-bar));
+    border-top: 2px solid;
+    border-color: hsl(var(--win-border-shadow));
+    padding: 2px 6px;
+    font-size: 11px;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .win-tab {
+    background: hsl(var(--win-button-face));
+    border: 2px solid;
+    border-color: hsl(var(--win-border-light)) hsl(var(--win-border-dark)) hsl(var(--win-border-dark)) hsl(var(--win-border-light));
+    border-bottom: none;
+    padding: 4px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    color: hsl(var(--foreground));
+  }
+
+  .win-tab.active {
+    background: hsl(var(--card));
+    border-bottom: 2px solid hsl(var(--card));
+    margin-bottom: -2px;
+    z-index: 1;
+    position: relative;
   }
 }
