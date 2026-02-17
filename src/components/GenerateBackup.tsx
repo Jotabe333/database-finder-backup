@@ -1,5 +1,5 @@
 import type { DatabaseEntry } from "@/types/database";
-import { X, Server, Download, Copy, CheckCircle, Settings2 } from "lucide-react";
+import { X, Server, Download, Copy, CheckCircle, Settings2, ChevronDown, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -12,6 +12,7 @@ interface Props {
 const GenerateBackup = ({ entry, savePath, onClose }: Props) => {
   const [downloaded, setDownloaded] = useState(false);
   const [showConfig, setShowConfig] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
 
   // Remove prefixo BANCODADOS_ se o usuário já incluiu no nome
   const cleanName = entry.name.replace(/^BANCODADOS_/i, "");
@@ -141,19 +142,30 @@ pause
 
           {/* BAT preview */}
           <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Preview do .bat</p>
-              <button
-                onClick={handleCopy}
-                className="flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <Copy className="w-3 h-3" />
-                Copiar
-              </button>
-            </div>
-            <div className="bg-background rounded-md p-3 border border-border max-h-[200px] overflow-y-auto">
-              <pre className="text-[10px] font-mono text-foreground/80 whitespace-pre-wrap leading-relaxed">{batContent}</pre>
-            </div>
+            <button
+              onClick={() => setShowPreview(!showPreview)}
+              className="flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground hover:text-foreground transition-colors mb-1.5"
+            >
+              {showPreview ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
+              <span className="text-[10px] font-semibold uppercase tracking-wider">Preview do .bat</span>
+            </button>
+
+            {showPreview && (
+              <>
+                <div className="flex justify-end mb-1">
+                  <button
+                    onClick={handleCopy}
+                    className="flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <Copy className="w-3 h-3" />
+                    Copiar
+                  </button>
+                </div>
+                <div className="bg-background rounded-md p-3 border border-border max-h-[200px] overflow-y-auto">
+                  <pre className="text-[10px] font-mono text-foreground/80 whitespace-pre-wrap leading-relaxed">{batContent}</pre>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Success */}
