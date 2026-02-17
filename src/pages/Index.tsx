@@ -120,7 +120,7 @@ const Index = () => {
                 {showMenu && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setShowMenu(false)} />
-                    <div className="absolute right-0 top-full mt-1 z-50 bg-popover rounded-md border border-border py-1 w-44 shadow-xl">
+                    <div className="absolute right-0 top-full mt-1 z-50 bg-card rounded-md border border-border py-1 w-44 shadow-2xl">
                       <button
                         onClick={handleExport}
                         className="flex items-center gap-2 w-full px-3 py-2 text-xs text-foreground hover:bg-secondary transition-colors"
