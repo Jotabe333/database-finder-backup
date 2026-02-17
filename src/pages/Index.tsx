@@ -5,9 +5,9 @@ import DetailView from "@/components/DetailView";
 import { Search, Plus, Pencil, Trash2, Database, Server } from "lucide-react";
 
 const INITIAL_DATA: DatabaseEntry[] = [
-  { id: "1", name: "RUFINI", cnpj: "12.345.678/0001-90", ip: "10.1.0.144", user: "sa", password: "backup123" },
-  { id: "2", name: "COMERCIAL_SP", cnpj: "98.765.432/0001-10", ip: "10.1.0.200", user: "admin", password: "srv2024" },
-  { id: "3", name: "INDUSTRIA_RJ", cnpj: "11.222.333/0001-44", ip: "192.168.1.50", user: "dba", password: "ind@2024" },
+  { id: "1", name: "RUFINI", cnpj: "12.345.678/0001-90", ip: "10.1.0.144", user: "sa", password: "backup123", backupPath: "D:\\Backups\\RUFINI" },
+  { id: "2", name: "COMERCIAL_SP", cnpj: "98.765.432/0001-10", ip: "10.1.0.200", user: "admin", password: "srv2024", backupPath: "E:\\Backups\\COMERCIAL" },
+  { id: "3", name: "INDUSTRIA_RJ", cnpj: "11.222.333/0001-44", ip: "192.168.1.50", user: "dba", password: "ind@2024", backupPath: "C:\\SQL_Backups" },
 ];
 
 const Index = () => {
