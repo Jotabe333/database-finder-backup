@@ -10,7 +10,7 @@ function createWindow() {
     height: 580,
     minWidth: 680,
     minHeight: 480,
-    icon: path.join(__dirname, '../public/favicon.png'),
+    icon: path.join(__dirname, '../dist/favicon.png'),
     autoHideMenuBar: true,
     resizable: true,
     show: false, // Don't show until ready — prevents white flash
