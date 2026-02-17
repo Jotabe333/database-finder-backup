@@ -66,7 +66,7 @@ del "${destino}\\BANCODADOS_${cleanName}.FBK"
 
 echo [4/5] Compactando com WinRAR...
 cd /d "${winrarPath}"
-rar.exe a -t "${destino}\\BANCODADOS ${cleanName}.rar" "${destino}\\*.FDB"
+rar.exe a -t "${destino}\\BANCODADOS_${cleanName}.rar" "${destino}\\*.FDB"
 if %ERRORLEVEL% NEQ 0 (
   echo.
   echo [ERRO] Falha ao compactar com WinRAR.
