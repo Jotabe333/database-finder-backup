@@ -34,17 +34,17 @@ echo Iniciando Backup do Banco: "${entry.name}" ...
 C:
 cd "${firebirdLocalPath}"
 echo Hora inicio: %time%
-gbak -l -t -user ${gbakUser} -password ${gbakPassword} "${entry.ip}:${firebirdRemotePath}/BANCODADOS_${entry.name}.FDB" "${destino}\\BANCODADOS_${entry.name}.FBK"
+gbak -l -t -user ${gbakUser} -password ${gbakPassword} "${entry.ip}:${firebirdRemotePath}/${entry.name}.FDB" "${destino}\\${entry.name}.FBK"
 if %ERRORLEVEL% NEQ 0 (
 echo.
 echo Erro no backup! Verifique os dados e tente novamente.
 pause
 exit /b 1
 )
-gbak -user ${gbakUser} -pas ${gbakPassword} -p 8192 -o -c "${destino}\\BANCODADOS_${entry.name}.FBK" "${destino}\\BANCODADOS_${entry.name}.FDB"
-del "${destino}\\BANCODADOS_${entry.name}.FBK"
+gbak -user ${gbakUser} -pas ${gbakPassword} -p 8192 -o -c "${destino}\\${entry.name}.FBK" "${destino}\\${entry.name}.FDB"
+del "${destino}\\${entry.name}.FBK"
 cd "${winrarPath}"
-rar.exe a -t "${destino}\\BANCODADOS ${entry.name}.rar" "${destino}\\*.FDB"
+rar.exe a -t "${destino}\\${entry.name}.rar" "${destino}\\*.FDB"
 del "${destino}\\*.FDB"
 echo.
 echo FEITOOOOoOOOooooooooOOOOO.
