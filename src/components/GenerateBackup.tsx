@@ -44,12 +44,15 @@ cd "${winrarPath}"
 rar.exe a -t "${destino}\\BANCODADOS ${cleanName}.rar" "${destino}\\*.FDB"
 del "${destino}\\*.FDB"
 echo.
-echo Hora termino: %time%
-echo.
 echo FEITOOOOoOOOooooooooOOOOO.
 if %ERRORLEVEL%==0 echo. & echo Processo concluido! & echo. & echo FDB disponivel na pasta "BDS". Bora beber um cafezinho
+echo Hora termino: %time%
 echo.
-pause`;
+pause
+) ELSE (
+echo. & echo Erro!!! Tu digitou certo? Tem certeza? ! Tenta de novo campeao...
+pause
+)`;
   };
 
   const batContent = buildBat();
