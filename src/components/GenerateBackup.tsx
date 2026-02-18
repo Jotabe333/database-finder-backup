@@ -92,7 +92,6 @@ echo.`;
 
   const buildBat = () => {
     const header = `@echo off
-chcp 65001 >nul
 title Backup/Restore - Gerador de Backup
 set TEVE_ERRO=0
 
