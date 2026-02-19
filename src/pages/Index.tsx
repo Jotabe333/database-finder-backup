@@ -250,13 +250,13 @@ const Index = () => {
                 </button>
                 <button
                   onClick={() => setSortOrder(s => s === "none" ? "asc" : s === "asc" ? "desc" : "none")}
-                  className="flex items-center gap-0.5 hover:text-foreground transition-colors"
+                  className="w-[80px] sm:w-[140px] flex items-center gap-0.5 hover:text-foreground transition-colors truncate"
                   title={sortOrder === "none" ? "Ordenar A-Z" : sortOrder === "asc" ? "Ordenar Z-A" : "Sem ordenação"}
                 >
-                  <span className="w-[80px] sm:w-[140px]">Nome</span>
-                  {sortOrder === "none" && <ArrowUpDown className="w-2.5 h-2.5 opacity-50" />}
-                  {sortOrder === "asc" && <ArrowUp className="w-2.5 h-2.5 text-primary" />}
-                  {sortOrder === "desc" && <ArrowDown className="w-2.5 h-2.5 text-primary" />}
+                  Nome
+                  {sortOrder === "none" && <ArrowUpDown className="w-2.5 h-2.5 opacity-50 shrink-0" />}
+                  {sortOrder === "asc" && <ArrowUp className="w-2.5 h-2.5 text-primary shrink-0" />}
+                  {sortOrder === "desc" && <ArrowDown className="w-2.5 h-2.5 text-primary shrink-0" />}
                 </button>
                 <span className="hidden sm:block w-[160px]">CNPJ</span>
                 <span className="flex-1">IP</span>
