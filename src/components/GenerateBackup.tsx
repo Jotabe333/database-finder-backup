@@ -1,6 +1,6 @@
 import type { DatabaseEntry } from "@/types/database";
-import { X, Server, Download, Copy, CheckCircle, ChevronDown, ChevronRight, AlertTriangle, Play, Loader2, XCircle, StopCircle } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { X, Server, Download, Copy, CheckCircle, ChevronDown, ChevronRight, AlertTriangle, Play, Loader2, XCircle, StopCircle, Clock } from "lucide-react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { toast } from "sonner";
 import { getConfigPaths } from "@/components/SettingsModal";
 
@@ -17,6 +17,27 @@ const GenerateBackup = ({ entries, savePath, onClose }: Props) => {
   const [execState, setExecState] = useState<ExecutionState>("idle");
   const [execOutput, setExecOutput] = useState("");
   const outputRef = useRef<HTMLPreElement>(null);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [finalElapsed, setFinalElapsed] = useState(0);
+
+  const formatTime = (seconds: number) => {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    if (h > 0) return `${h}h ${m.toString().padStart(2, "0")}m ${s.toString().padStart(2, "0")}s`;
+    if (m > 0) return `${m}m ${s.toString().padStart(2, "0")}s`;
+    return `${s}s`;
+  };
+
+  // Timer effect
+  useEffect(() => {
+    if (execState === "running" || execState === "confirm-cancel") {
+      const interval = setInterval(() => {
+        setElapsedSeconds((prev) => prev + 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [execState]);
 
   const config = getConfigPaths();
   const firebirdLocalPath = config.firebirdLocalPath;
@@ -200,6 +221,7 @@ echo.`;
 
     setExecState("running");
     setExecOutput("");
+    setElapsedSeconds(0);
 
     // Wait for React to render the loading state before starting
     await new Promise((r) => setTimeout(r, 100));
@@ -208,12 +230,15 @@ echo.`;
       const result = await api.runBat(buildBatForExecution());
 
       if (result.success) {
+        setFinalElapsed(elapsedSeconds);
         setExecState("success");
       } else {
+        setFinalElapsed(elapsedSeconds);
         setExecState("error");
         if (!execOutput) setExecOutput(result.output || "Erro desconhecido durante a execução.");
       }
     } catch (err: any) {
+      setFinalElapsed(elapsedSeconds);
       setExecState("error");
       setExecOutput((prev) => prev + `\n\n[ERRO] Exceção: ${err?.message || "Erro desconhecido"}`);
     }
@@ -223,6 +248,7 @@ echo.`;
     const api = (window as any).electronAPI;
     if (api?.cancelBat) {
       await api.cancelBat();
+      setFinalElapsed(elapsedSeconds);
       setExecState("error");
       setExecOutput((prev) => prev + "\n\n[CANCELADO] Backup cancelado pelo usuário.");
     }
@@ -290,9 +316,13 @@ echo.`;
                       </span>
                     )}
                   </div>
-                  <p className="text-[11px] text-muted-foreground">Não feche a aplicação. O processo está em andamento.</p>
-                </div>
-              </div>
+                  <div className="flex items-center gap-2">
+                    <p className="text-[11px] text-muted-foreground">Não feche a aplicação. O processo está em andamento.</p>
+                    <span className="flex items-center gap-1 text-[11px] font-mono text-muted-foreground shrink-0">
+                      <Clock className="w-3 h-3" />
+                      {formatTime(elapsedSeconds)}
+                    </span>
+                  </div>
               {/* Progress bar */}
               {totalBanks > 1 && (
                 <div className="space-y-1">
