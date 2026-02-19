@@ -109,8 +109,13 @@ ipcMain.handle('run-bat', async (_event, batContent) => {
 });
 
 ipcMain.handle('cancel-bat', async () => {
-  if (runningProc) {
-    runningProc.kill();
+  if (runningProc && runningProc.pid) {
+    try {
+      // Kill entire process tree (cmd + gbak + children) using taskkill
+      spawn('taskkill', ['/T', '/F', '/PID', runningProc.pid.toString()], { windowsHide: true });
+    } catch {
+      try { runningProc.kill(); } catch {}
+    }
     runningProc = null;
     return true;
   }
