@@ -43,7 +43,8 @@ const GenerateBackup = ({ entries, savePath, onClose }: Props) => {
   }, []);
 
   const buildBatForEntry = (entry: DatabaseEntry) => {
-    const cleanName = entry.name.replace(/^BANCODADOS_/i, "");
+    const cleanName = entry.name.replace(/^BANCODADOS[\s_]/i, "");
+    const dbFileName = `BANCODADOS ${cleanName}`;
     const gbakUser = entry.user || "SYSDBA";
     const gbakPassword = entry.password || "Bwd@UPiC!FR4";
     const firebirdRemotePath = entry.backupPath || "/firebird/data";
@@ -51,20 +52,20 @@ const GenerateBackup = ({ entries, savePath, onClose }: Props) => {
     return `
 echo.
 echo ============================================
-echo   Backup do Banco: "BANCODADOS_${cleanName}"
+echo   Backup do Banco: "${dbFileName}"
 echo   Servidor: ${entry.ip}
 echo   Usuario: ${gbakUser}
 echo ============================================
 echo.
-echo Iniciando Backup do Banco: "BANCODADOS_${cleanName}" ...
+echo Iniciando Backup do Banco: "${dbFileName}" ...
 echo Hora inicio: %time%
 
 echo [1/5] Executando backup (gbak)...
 cd /d "${firebirdLocalPath}"
-gbak -l -t -user ${gbakUser} -password ${gbakPassword} "${entry.ip}:${firebirdRemotePath}/BANCODADOS_${cleanName}.FDB" "${destino}\\BANCODADOS_${cleanName}.FBK"
-if not exist "${destino}\\BANCODADOS_${cleanName}.FBK" (
+gbak -l -t -user ${gbakUser} -password ${gbakPassword} "${entry.ip}:${firebirdRemotePath}/${dbFileName}.FDB" "${destino}\\${dbFileName}.FBK"
+if not exist "${destino}\\${dbFileName}.FBK" (
   echo.
-  echo [ERRO] Falha ao gerar o arquivo FBK do banco "BANCODADOS_${cleanName}".
+  echo [ERRO] Falha ao gerar o arquivo FBK do banco "${dbFileName}".
   echo   Verifique: IP do servidor, credenciais, caminho remoto do banco.
   echo.
   set TEVE_ERRO=1
@@ -73,10 +74,10 @@ if not exist "${destino}\\BANCODADOS_${cleanName}.FBK" (
 echo   [OK] FBK gerado com sucesso.
 
 echo [2/5] Executando restore local...
-gbak -user ${gbakUser} -pas ${gbakPassword} -p 8192 -o -c "${destino}\\BANCODADOS_${cleanName}.FBK" "${destino}\\BANCODADOS_${cleanName}.FDB"
-if not exist "${destino}\\BANCODADOS_${cleanName}.FDB" (
+gbak -user ${gbakUser} -pas ${gbakPassword} -p 8192 -o -c "${destino}\\${dbFileName}.FBK" "${destino}\\${dbFileName}.FDB"
+if not exist "${destino}\\${dbFileName}.FDB" (
   echo.
-  echo [ERRO] Falha ao restaurar o banco "BANCODADOS_${cleanName}".
+  echo [ERRO] Falha ao restaurar o banco "${dbFileName}".
   echo   O arquivo .FBK pode estar corrompido ou sem espaco em disco.
   echo.
   set TEVE_ERRO=1
@@ -85,12 +86,12 @@ if not exist "${destino}\\BANCODADOS_${cleanName}.FDB" (
 echo   [OK] FDB restaurado com sucesso.
 
 echo [3/5] Removendo arquivo .FBK temporario...
-del "${destino}\\BANCODADOS_${cleanName}.FBK"
+del "${destino}\\${dbFileName}.FBK"
 
 echo [4/5] Compactando com WinRAR...
 cd /d "${winrarPath}"
-rar.exe a -t "${destino}\\BANCODADOS_${cleanName}.rar" "${destino}\\*.FDB"
-if not exist "${destino}\\BANCODADOS_${cleanName}.rar" (
+rar.exe a -t "${destino}\\${dbFileName}.rar" "${destino}\\*.FDB"
+if not exist "${destino}\\${dbFileName}.rar" (
   echo.
   echo [ERRO] Falha ao compactar com WinRAR.
   echo   Verifique se o WinRAR esta instalado em: ${winrarPath}
@@ -105,7 +106,7 @@ del "${destino}\\*.FDB"
 
 echo.
 echo FEITOOOOoOOOooooooooOOOOO.
-echo Processo concluido para "BANCODADOS_${cleanName}"!
+echo Processo concluido para "${dbFileName}"!
 echo FDB disponivel na pasta "BDS". Bora beber um cafezinho
 
 :PROXIMO_${cleanName}
