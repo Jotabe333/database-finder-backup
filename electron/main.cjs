@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 
 // Disable GPU acceleration for faster startup
@@ -17,7 +17,8 @@ function createWindow() {
     backgroundColor: '#0b0e13', // Match dark theme --background: 222 22% 5%
     webPreferences: {
       nodeIntegration: false,
-      contextIsolation: true
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.cjs')
     }
   });
 
@@ -28,6 +29,15 @@ function createWindow() {
 
   win.loadFile(path.join(__dirname, '../dist/index.html'));
 }
+
+ipcMain.handle('select-folder', async () => {
+  const result = await dialog.showOpenDialog({
+    properties: ['openDirectory'],
+    title: 'Selecionar pasta de destino'
+  });
+  if (result.canceled || result.filePaths.length === 0) return null;
+  return result.filePaths[0];
+});
 
 app.whenReady().then(createWindow);
 
