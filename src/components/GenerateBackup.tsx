@@ -323,6 +323,8 @@ echo.`;
                       {formatTime(elapsedSeconds)}
                     </span>
                   </div>
+                </div>
+              </div>
               {/* Progress bar */}
               {totalBanks > 1 && (
                 <div className="space-y-1">
@@ -393,7 +395,10 @@ echo.`;
                 <CheckCircle className="w-5 h-5 text-[hsl(var(--success))]" />
                 <div>
                   <p className="text-sm font-semibold text-foreground">Backup concluído com sucesso!</p>
-                  <p className="text-[11px] text-muted-foreground">Todos os {entries.length} banco(s) foram processados sem erros.</p>
+                  <p className="text-[11px] text-muted-foreground">
+                    Todos os {entries.length} banco(s) foram processados sem erros.
+                    {finalElapsed > 0 && <span className="ml-1 font-mono">({formatTime(finalElapsed)})</span>}
+                  </p>
                 </div>
               </div>
               {execOutput && (
@@ -428,7 +433,10 @@ echo.`;
                 <XCircle className="w-5 h-5 text-destructive" />
                 <div>
                   <p className="text-sm font-semibold text-foreground">Erro durante o backup</p>
-                  <p className="text-[11px] text-muted-foreground">Alguns bancos podem ter falhado. Verifique o log abaixo.</p>
+                  <p className="text-[11px] text-muted-foreground">
+                    Alguns bancos podem ter falhado. Verifique o log abaixo.
+                    {finalElapsed > 0 && <span className="ml-1 font-mono">({formatTime(finalElapsed)})</span>}
+                  </p>
                 </div>
               </div>
               <pre
