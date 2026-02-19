@@ -5,7 +5,7 @@ import RegisterForm from "@/components/RegisterForm";
 import DetailView from "@/components/DetailView";
 import GenerateBackup from "@/components/GenerateBackup";
 import SettingsModal from "@/components/SettingsModal";
-import { Search, Plus, Pencil, Trash2, Database, Server, Copy, Play, FolderOpen, MoreVertical, Upload, Download, Sun, Moon, CheckSquare, Square, Settings2 } from "lucide-react";
+import { Search, Plus, Pencil, Trash2, Database, Server, Copy, Play, FolderOpen, MoreVertical, Upload, Download, Sun, Moon, CheckSquare, Square, Settings2, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 
 const STORAGE_KEY = "backup-generator-entries";
 const SAVE_PATH_KEY = "backup-generator-save-path";
@@ -30,6 +30,7 @@ const Index = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [sortOrder, setSortOrder] = useState<"none" | "asc" | "desc">("none");
   const [isDark, setIsDark] = useState(() => {
     const saved = localStorage.getItem("theme");
     return saved ? saved === "dark" : true;
@@ -48,9 +49,13 @@ const Index = () => {
     localStorage.setItem(SAVE_PATH_KEY, savePath);
   }, [savePath]);
 
-  const filtered = entries.filter((e) =>
-    e.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = entries
+    .filter((e) => e.name.toLowerCase().includes(search.toLowerCase()))
+    .sort((a, b) => {
+      if (sortOrder === "asc") return a.name.localeCompare(b.name);
+      if (sortOrder === "desc") return b.name.localeCompare(a.name);
+      return 0;
+    });
 
   const toggleSelect = (id: string) => {
     setSelectedIds((prev) => {
@@ -243,7 +248,16 @@ const Index = () => {
                 >
                   {allSelected ? <CheckSquare className="w-3.5 h-3.5 text-primary" /> : <Square className="w-3.5 h-3.5" />}
                 </button>
-                <span className="w-[80px] sm:w-[140px]">Nome</span>
+                <button
+                  onClick={() => setSortOrder(s => s === "none" ? "asc" : s === "asc" ? "desc" : "none")}
+                  className="flex items-center gap-0.5 hover:text-foreground transition-colors"
+                  title={sortOrder === "none" ? "Ordenar A-Z" : sortOrder === "asc" ? "Ordenar Z-A" : "Sem ordenação"}
+                >
+                  <span className="w-[80px] sm:w-[140px]">Nome</span>
+                  {sortOrder === "none" && <ArrowUpDown className="w-2.5 h-2.5 opacity-50" />}
+                  {sortOrder === "asc" && <ArrowUp className="w-2.5 h-2.5 text-primary" />}
+                  {sortOrder === "desc" && <ArrowDown className="w-2.5 h-2.5 text-primary" />}
+                </button>
                 <span className="hidden sm:block w-[160px]">CNPJ</span>
                 <span className="flex-1">IP</span>
                 <span className="w-[76px] sm:w-[90px] text-right">Ações</span>
