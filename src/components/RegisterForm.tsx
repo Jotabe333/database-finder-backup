@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { DatabaseEntry } from "@/types/database";
-import { X, Server, Globe, User, Lock, FolderOpen } from "lucide-react";
+import { X, Server, Globe, User, Lock, FolderOpen, HelpCircle } from "lucide-react";
 
 interface Props {
   onSave: (entry: DatabaseEntry) => void;
@@ -81,9 +81,16 @@ const RegisterForm = ({ onSave, onCancel, editEntry }: Props) => {
                 <input className={fieldClass("ip")} value={ip} onChange={(e) => { setIp(e.target.value); setErrors((p) => ({ ...p, ip: false })); }} placeholder="10.1.0.144" />
               </div>
               <div>
-                <label className="text-[11px] text-muted-foreground mb-1 flex items-center gap-1"><FolderOpen className="w-3 h-3" /> Caminho do Banco <span className="text-muted-foreground/50">(opcional)</span></label>
+                <label className="text-[11px] text-muted-foreground mb-1 flex items-center gap-1">
+                  <FolderOpen className="w-3 h-3" /> Caminho do Banco <span className="text-muted-foreground/50">(opcional)</span>
+                  <span className="relative group ml-0.5">
+                    <HelpCircle className="w-3 h-3 text-muted-foreground/50 cursor-help" />
+                    <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-1.5 w-48 px-2.5 py-1.5 rounded-md bg-popover text-popover-foreground text-[10px] leading-snug border border-border shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity z-50">
+                      Se preenchido, o backup sera buscado deste caminho no servidor. Se vazio, usa o padrao: <span className="font-mono font-medium">/firebird/data</span>
+                    </span>
+                  </span>
+                </label>
                 <input className={fieldClass()} value={backupPath} onChange={(e) => setBackupPath(e.target.value)} placeholder="/firebird/data" />
-                <p className="text-[9px] text-muted-foreground/60 mt-0.5">Se vazio, usa: /firebird/data</p>
               </div>
               <div>
                 <label className="text-[11px] text-muted-foreground mb-1 flex items-center gap-1"><User className="w-3 h-3" /> Usuário</label>
