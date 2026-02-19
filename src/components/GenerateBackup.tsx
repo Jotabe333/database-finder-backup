@@ -32,16 +32,15 @@ const GenerateBackup = ({ entries, savePath, onClose }: Props) => {
     }
   }, [execOutput]);
 
-  // Listen to real-time output
+  // Listen to real-time output - always subscribed so we never miss data
   useEffect(() => {
-    if (execState !== "running") return;
     const api = (window as any).electronAPI;
     if (!api?.onBatOutput) return;
     const cleanup = api.onBatOutput((data: string) => {
       setExecOutput((prev) => prev + data);
     });
     return cleanup;
-  }, [execState]);
+  }, []);
 
   const buildBatForEntry = (entry: DatabaseEntry) => {
     const cleanName = entry.name.replace(/^BANCODADOS_/i, "");
@@ -185,18 +184,29 @@ echo.`;
 
   const handleExecute = async () => {
     const api = (window as any).electronAPI;
-    if (!api?.runBat) return;
+    if (!api?.runBat) {
+      toast.error("Função de execução não disponível. Verifique se está rodando o app desktop.");
+      return;
+    }
 
     setExecState("running");
     setExecOutput("");
 
-    const result = await api.runBat(buildBatForExecution());
+    // Wait for React to render the loading state before starting
+    await new Promise((r) => setTimeout(r, 100));
 
-    if (result.success) {
-      setExecState("success");
-    } else {
+    try {
+      const result = await api.runBat(buildBatForExecution());
+
+      if (result.success) {
+        setExecState("success");
+      } else {
+        setExecState("error");
+        if (!execOutput) setExecOutput(result.output || "Erro desconhecido durante a execução.");
+      }
+    } catch (err: any) {
       setExecState("error");
-      if (!execOutput) setExecOutput(result.output);
+      setExecOutput((prev) => prev + `\n\n[ERRO] Exceção: ${err?.message || "Erro desconhecido"}`);
     }
   };
 
