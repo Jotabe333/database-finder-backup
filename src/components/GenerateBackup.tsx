@@ -13,7 +13,6 @@ interface Props {
 type ExecutionState = "idle" | "running" | "success" | "error";
 
 const GenerateBackup = ({ entries, savePath, onClose }: Props) => {
-  const [downloaded, setDownloaded] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [execState, setExecState] = useState<ExecutionState>("idle");
   const [execOutput, setExecOutput] = useState("");
@@ -168,21 +167,20 @@ echo.`;
     return header + body + footer;
   };
 
-  const handleDownload = () => {
-    const crlfContent = batContent.replace(/\n/g, "\r\n");
-    const blob = new Blob([crlfContent], { type: "application/x-bat;charset=utf-8" });
+  const handleDownloadLog = () => {
+    if (!execOutput) return;
+    const crlfContent = execOutput.replace(/\n/g, "\r\n");
+    const blob = new Blob([crlfContent], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    const fileName = entries.length === 1
-      ? `backup_${entries[0].name}.bat`
-      : `backup_${entries.length}_bancos.bat`;
-    a.download = fileName;
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+    a.download = `backup_log_${timestamp}.txt`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    setDownloaded(true);
+    toast.success("Log baixado com sucesso!");
   };
 
   const handleExecute = async () => {
@@ -271,7 +269,14 @@ echo.`;
                   </pre>
                 </details>
               )}
-              <div className="flex justify-end pt-1">
+              <div className="flex justify-end gap-1.5 pt-1">
+                <button
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-medium bg-secondary text-secondary-foreground hover:brightness-110 border border-border/50 transition-all"
+                  onClick={handleDownloadLog}
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  Baixar Log
+                </button>
                 <button
                   className="px-4 py-2 rounded-md text-xs font-medium bg-primary text-primary-foreground hover:brightness-110 transition-all"
                   onClick={onClose}
@@ -303,6 +308,13 @@ echo.`;
                   onClick={() => { setExecState("idle"); setExecOutput(""); }}
                 >
                   Voltar
+                </button>
+                <button
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-medium bg-secondary text-secondary-foreground hover:brightness-110 border border-border/50 transition-all"
+                  onClick={handleDownloadLog}
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  Baixar Log
                 </button>
                 <button
                   className="px-4 py-2 rounded-md text-xs font-medium bg-primary text-primary-foreground hover:brightness-110 transition-all"
@@ -402,15 +414,6 @@ echo.`;
                 )}
               </div>
 
-              {/* Download success */}
-              {downloaded && (
-                <div className="flex items-center gap-2.5 rounded-md bg-[hsl(var(--success))]/10 border border-[hsl(var(--success))]/20 px-3 py-2.5">
-                  <CheckCircle className="w-3.5 h-3.5 text-[hsl(var(--success))]" />
-                  <span className="text-xs text-foreground">
-                    Arquivo .bat baixado com {entries.length} banco(s)!
-                  </span>
-                </div>
-              )}
 
               {/* Actions */}
               <div className="flex justify-end gap-1.5 pt-1">
@@ -419,13 +422,6 @@ echo.`;
                   onClick={onClose}
                 >
                   Fechar
-                </button>
-                <button
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-md text-xs font-medium bg-secondary text-secondary-foreground hover:brightness-110 border border-border/50 transition-all"
-                  onClick={handleDownload}
-                >
-                  <Download className="w-3.5 h-3.5" />
-                  Baixar .bat
                 </button>
                 {isElectron && (
                   <button
