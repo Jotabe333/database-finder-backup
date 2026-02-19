@@ -50,7 +50,7 @@ const DetailView = ({ entry, onClose, onEdit }: Props) => {
             <InfoRow label="IP" value={entry.ip} mono />
             <InfoRow label="Usuário" value={entry.user} />
             <InfoRow label="Senha" value={entry.password ? "••••••••" : ""} />
-            <InfoRow label="Local do Backup" value={entry.backupPath} mono />
+            <InfoRow label="Local do Backup" value={entry.backupPath || "/firebird/data"} mono />
           </div>
 
           <div className="flex justify-end gap-1.5 pt-4">
