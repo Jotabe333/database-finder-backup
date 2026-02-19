@@ -90,7 +90,7 @@ del "${destino}\\${dbFileName}.FBK"
 
 echo [4/5] Compactando com WinRAR...
 cd /d "${winrarPath}"
-rar.exe a -t "${destino}\\${dbFileName}.rar" "${destino}\\*.FDB"
+rar.exe a -t "${destino}\\${dbFileName}.rar" "${destino}\\${dbFileName}.FDB"
 if not exist "${destino}\\${dbFileName}.rar" (
   echo.
   echo [ERRO] Falha ao compactar com WinRAR.
@@ -101,8 +101,8 @@ if not exist "${destino}\\${dbFileName}.rar" (
 )
 echo   [OK] RAR compactado com sucesso.
 
-echo [5/5] Limpando arquivos .FDB temporarios...
-del "${destino}\\*.FDB"
+echo [5/5] Limpando arquivo .FDB temporario...
+del "${destino}\\${dbFileName}.FDB"
 
 echo.
 echo FEITOOOOoOOOooooooooOOOOO.
