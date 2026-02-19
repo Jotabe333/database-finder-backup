@@ -350,7 +350,7 @@ const Index = () => {
           {/* Status bar */}
           <div className="px-4 sm:px-5 py-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-t border-border bg-card/50">
             <span className="text-[10px] text-muted-foreground font-mono">
-              {selectedIds.size} selecionado(s) · {filtered.length} filtrado(s) · {entries.length} total
+              {selectedIds.size} selecionado(s) · {entries.length} total
             </span>
             <div className="flex flex-wrap gap-1.5">
               <button
