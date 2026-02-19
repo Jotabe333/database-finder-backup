@@ -43,6 +43,8 @@ ipcMain.handle('select-folder', async () => {
   return result.filePaths[0];
 });
 
+let runningProc = null;
+
 ipcMain.handle('run-bat', async (_event, batContent) => {
   return new Promise((resolve) => {
     // Save .bat to temp file with CRLF line endings and Windows-1252 encoding
@@ -58,6 +60,8 @@ ipcMain.handle('run-bat', async (_event, batContent) => {
       cwd: tmpDir,
       windowsHide: true
     });
+
+    runningProc = proc;
 
     proc.stdout.on('data', (data) => {
       const text = data.toString('latin1');
@@ -77,10 +81,9 @@ ipcMain.handle('run-bat', async (_event, batContent) => {
     });
 
     proc.on('close', (code) => {
-      // Clean up temp file
+      runningProc = null;
       try { fs.unlinkSync(batPath); } catch {}
 
-      // Check output for error markers
       const hadErrors = output.includes('[ERRO]') || output.includes('TEVE_ERRO');
       const exitError = code !== 0;
 
@@ -93,6 +96,7 @@ ipcMain.handle('run-bat', async (_event, batContent) => {
     });
 
     proc.on('error', (err) => {
+      runningProc = null;
       try { fs.unlinkSync(batPath); } catch {}
       resolve({
         success: false,
@@ -102,6 +106,15 @@ ipcMain.handle('run-bat', async (_event, batContent) => {
       });
     });
   });
+});
+
+ipcMain.handle('cancel-bat', async () => {
+  if (runningProc) {
+    runningProc.kill();
+    runningProc = null;
+    return true;
+  }
+  return false;
 });
 
 app.whenReady().then(createWindow);

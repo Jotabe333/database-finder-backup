@@ -1,5 +1,5 @@
 import type { DatabaseEntry } from "@/types/database";
-import { X, Server, Download, Copy, CheckCircle, ChevronDown, ChevronRight, AlertTriangle, Play, Loader2, XCircle } from "lucide-react";
+import { X, Server, Download, Copy, CheckCircle, ChevronDown, ChevronRight, AlertTriangle, Play, Loader2, XCircle, StopCircle } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { getConfigPaths } from "@/components/SettingsModal";
@@ -200,6 +200,15 @@ echo.`;
     }
   };
 
+  const handleCancel = async () => {
+    const api = (window as any).electronAPI;
+    if (api?.cancelBat) {
+      await api.cancelBat();
+      setExecState("error");
+      setExecOutput((prev) => prev + "\n\n[CANCELADO] Backup cancelado pelo usuário.");
+    }
+  };
+
   const handleCopy = () => {
     navigator.clipboard.writeText(batContent);
     toast.success("Conteúdo do .bat copiado!");
@@ -246,9 +255,18 @@ echo.`;
                   ref={outputRef}
                   className="bg-background rounded-md p-3 border border-border max-h-[200px] overflow-y-auto text-[10px] font-mono text-foreground/80 whitespace-pre-wrap leading-relaxed"
                 >
-                  {execOutput}
+               {execOutput}
                 </pre>
               )}
+              <div className="flex justify-end pt-2">
+                <button
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-medium bg-destructive text-destructive-foreground hover:brightness-110 transition-all"
+                  onClick={handleCancel}
+                >
+                  <StopCircle className="w-3.5 h-3.5" />
+                  Cancelar
+                </button>
+              </div>
             </div>
           )}
 
