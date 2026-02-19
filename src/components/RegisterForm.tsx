@@ -24,9 +24,11 @@ const RegisterForm = ({ onSave, onCancel, editEntry }: Props) => {
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
+    const cleanName = name.trim().replace(/^BANCODADOS[\s_]/i, "");
+
     onSave({
       id: editEntry?.id ?? crypto.randomUUID(),
-      name: name.trim(),
+      name: cleanName,
       cnpj: cnpj.trim(),
       ip: ip.trim(),
       user: user.trim(),
