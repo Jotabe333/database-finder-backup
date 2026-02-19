@@ -268,15 +268,46 @@ echo.`;
 
         <div className="p-4 space-y-3 overflow-y-auto">
           {/* Execution overlay states */}
-          {(execState === "running" || execState === "confirm-cancel") && (
+          {(execState === "running" || execState === "confirm-cancel") && (() => {
+            // Calculate current bank progress from output
+            const bankMatches = execOutput.match(/Backup do Banco:/g);
+            const currentBank = bankMatches ? bankMatches.length : 0;
+            const totalBanks = entries.length;
+            const completedMatches = execOutput.match(/Processo concluido para/g);
+            const completedBanks = completedMatches ? completedMatches.length : 0;
+            const progressPercent = totalBanks > 0 ? Math.round((completedBanks / totalBanks) * 100) : 0;
+
+            return (
             <div className="rounded-md border border-primary/30 bg-primary/5 px-4 py-4 space-y-3">
               <div className="flex items-center gap-3">
                 <Loader2 className="w-5 h-5 text-primary animate-spin" />
-                <div>
-                  <p className="text-sm font-semibold text-foreground">Executando backup...</p>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-semibold text-foreground">Executando backup...</p>
+                    {totalBanks > 1 && currentBank > 0 && (
+                      <span className="text-[11px] font-medium text-primary">
+                        Banco {currentBank} de {totalBanks}
+                      </span>
+                    )}
+                  </div>
                   <p className="text-[11px] text-muted-foreground">Não feche a aplicação. O processo está em andamento.</p>
                 </div>
               </div>
+              {/* Progress bar */}
+              {totalBanks > 1 && (
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+                    <span>{completedBanks} de {totalBanks} concluído(s)</span>
+                    <span>{progressPercent}%</span>
+                  </div>
+                  <div className="h-1.5 w-full rounded-full bg-border/60 overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-primary transition-all duration-500 ease-out"
+                      style={{ width: `${progressPercent}%` }}
+                    />
+                  </div>
+                </div>
+              )}
               {execOutput && (
                 <pre
                   ref={outputRef}
@@ -323,7 +354,8 @@ echo.`;
                 </div>
               )}
             </div>
-          )}
+            );
+          })()}
 
           {execState === "success" && (
             <div className="rounded-md border border-[hsl(var(--success))]/30 bg-[hsl(var(--success))]/5 px-4 py-4 space-y-3">
