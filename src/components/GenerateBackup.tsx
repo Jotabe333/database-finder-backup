@@ -410,6 +410,15 @@ echo.`;
                 </details>
               )}
               <div className="flex justify-end gap-1.5 pt-1">
+                {execOutput && (
+                  <button
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-medium bg-secondary text-secondary-foreground hover:brightness-110 border border-border/50 transition-all"
+                    onClick={() => { navigator.clipboard.writeText(execOutput); toast.success("Log copiado para a área de transferência!"); }}
+                  >
+                    <Copy className="w-3.5 h-3.5" />
+                    Copiar Log
+                  </button>
+                )}
                 <button
                   className="flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-medium bg-secondary text-secondary-foreground hover:brightness-110 border border-border/50 transition-all"
                   onClick={handleDownloadLog}
@@ -452,6 +461,15 @@ echo.`;
                 >
                   Voltar
                 </button>
+                {execOutput && (
+                  <button
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-medium bg-secondary text-secondary-foreground hover:brightness-110 border border-border/50 transition-all"
+                    onClick={() => { navigator.clipboard.writeText(execOutput); toast.success("Log copiado para a área de transferência!"); }}
+                  >
+                    <Copy className="w-3.5 h-3.5" />
+                    Copiar Log
+                  </button>
+                )}
                 <button
                   className="flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-medium bg-secondary text-secondary-foreground hover:brightness-110 border border-border/50 transition-all"
                   onClick={handleDownloadLog}
