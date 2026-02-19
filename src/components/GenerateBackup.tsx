@@ -10,7 +10,7 @@ interface Props {
   onClose: () => void;
 }
 
-type ExecutionState = "idle" | "running" | "success" | "error";
+type ExecutionState = "idle" | "running" | "success" | "error" | "confirm-cancel";
 
 const GenerateBackup = ({ entries, savePath, onClose }: Props) => {
   const [showPreview, setShowPreview] = useState(false);
@@ -219,13 +219,21 @@ echo.`;
     }
   };
 
+  const handleRequestCancel = () => {
+    setExecState("confirm-cancel");
+  };
+
+  const handleDismissCancel = () => {
+    setExecState("running");
+  };
+
   const handleCopy = () => {
     navigator.clipboard.writeText(batContent);
     toast.success("Conteúdo do .bat copiado!");
   };
 
   // Block closing while running
-  const canClose = execState !== "running";
+  const canClose = execState !== "running" && execState !== "confirm-cancel";
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-background/70 backdrop-blur-sm p-4">
@@ -251,7 +259,7 @@ echo.`;
 
         <div className="p-4 space-y-3 overflow-y-auto">
           {/* Execution overlay states */}
-          {execState === "running" && (
+          {(execState === "running" || execState === "confirm-cancel") && (
             <div className="rounded-md border border-primary/30 bg-primary/5 px-4 py-4 space-y-3">
               <div className="flex items-center gap-3">
                 <Loader2 className="w-5 h-5 text-primary animate-spin" />
@@ -268,15 +276,43 @@ echo.`;
                {execOutput}
                 </pre>
               )}
-              <div className="flex justify-end pt-2">
-                <button
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-medium bg-destructive text-destructive-foreground hover:brightness-110 transition-all"
-                  onClick={handleCancel}
-                >
-                  <StopCircle className="w-3.5 h-3.5" />
-                  Cancelar
-                </button>
-              </div>
+
+              {execState === "confirm-cancel" && (
+                <div className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-3 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4 text-destructive shrink-0" />
+                    <p className="text-xs font-medium text-foreground">Tem certeza que deseja cancelar?</p>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground pl-6">O processo do gbak será encerrado e o backup em andamento será perdido.</p>
+                  <div className="flex justify-end gap-1.5 pt-1">
+                    <button
+                      className="px-3 py-1.5 rounded-md text-xs font-medium bg-secondary text-secondary-foreground hover:brightness-110 border border-border/50 transition-all"
+                      onClick={handleDismissCancel}
+                    >
+                      Continuar backup
+                    </button>
+                    <button
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium bg-destructive text-destructive-foreground hover:brightness-110 transition-all"
+                      onClick={handleCancel}
+                    >
+                      <StopCircle className="w-3.5 h-3.5" />
+                      Sim, cancelar
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {execState === "running" && (
+                <div className="flex justify-end pt-2">
+                  <button
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-medium bg-destructive text-destructive-foreground hover:brightness-110 transition-all"
+                    onClick={handleRequestCancel}
+                  >
+                    <StopCircle className="w-3.5 h-3.5" />
+                    Cancelar
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
