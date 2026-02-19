@@ -65,7 +65,7 @@ const GenerateBackup = ({ entries, savePath, onClose }: Props) => {
 
   const buildBatForEntry = (entry: DatabaseEntry) => {
     const cleanName = entry.name.replace(/^BANCODADOS[\s_]/i, "");
-    const dbFileName = `BANCODADOS ${cleanName}`;
+    const dbFileName = `BANCODADOS_${cleanName}`;
     const gbakUser = entry.user || "SYSDBA";
     const gbakPassword = entry.password || "Bwd@UPiC!FR4";
     const firebirdRemotePath = entry.backupPath || "/firebird/data";
