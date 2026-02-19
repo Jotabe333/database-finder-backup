@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { DatabaseEntry } from "@/types/database";
-import { X, Server, Globe, User, Lock } from "lucide-react";
+import { X, Server, Globe, User, Lock, FolderOpen } from "lucide-react";
 
 interface Props {
   onSave: (entry: DatabaseEntry) => void;
@@ -79,6 +79,11 @@ const RegisterForm = ({ onSave, onCancel, editEntry }: Props) => {
               <div>
                 <label className="text-[11px] text-muted-foreground mb-1 flex items-center gap-1"><Globe className="w-3 h-3" /> IP <span className="text-destructive">*</span></label>
                 <input className={fieldClass("ip")} value={ip} onChange={(e) => { setIp(e.target.value); setErrors((p) => ({ ...p, ip: false })); }} placeholder="10.1.0.144" />
+              </div>
+              <div>
+                <label className="text-[11px] text-muted-foreground mb-1 flex items-center gap-1"><FolderOpen className="w-3 h-3" /> Caminho do Banco <span className="text-muted-foreground/50">(opcional)</span></label>
+                <input className={fieldClass()} value={backupPath} onChange={(e) => setBackupPath(e.target.value)} placeholder="/firebird/data" />
+                <p className="text-[9px] text-muted-foreground/60 mt-0.5">Se vazio, usa: /firebird/data</p>
               </div>
               <div>
                 <label className="text-[11px] text-muted-foreground mb-1 flex items-center gap-1"><User className="w-3 h-3" /> Usuário</label>
