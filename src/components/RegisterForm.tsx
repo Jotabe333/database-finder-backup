@@ -84,7 +84,7 @@ const RegisterForm = ({ onSave, onCancel, editEntry }: Props) => {
                 <label className="text-[11px] text-muted-foreground mb-1 flex items-center gap-1">
                   <FolderOpen className="w-3 h-3" /> Caminho do Banco <span className="text-muted-foreground/50">(opcional)</span>
                   <span className="relative group ml-0.5">
-                    <HelpCircle className="w-3 h-3 text-muted-foreground/50 cursor-help" />
+                    <HelpCircle className="w-3 h-3 text-amber-400 cursor-help" />
                     <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-1.5 w-48 px-2.5 py-1.5 rounded-md bg-popover text-popover-foreground text-[10px] leading-snug border border-border shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity z-50">
                       Se preenchido, o backup sera buscado deste caminho no servidor. Se vazio, usa o padrao: <span className="font-mono font-medium">/firebird/data</span>
                     </span>
